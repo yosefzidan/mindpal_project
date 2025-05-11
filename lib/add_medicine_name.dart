@@ -1,0 +1,93 @@
+import 'package:flutter/material.dart';
+
+class AddMedicineName extends StatefulWidget {
+  static const String routeName = "AddMedicineName";
+
+  @override
+  _AddMedicineNameState createState() => _AddMedicineNameState();
+}
+
+class _AddMedicineNameState extends State<AddMedicineName> {
+  TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.black),
+      backgroundColor: Colors.black,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(width * 0.07),
+          child: Column(
+            children: [
+              Text(
+                'Hey Sarah this is your first\n bottle ! ',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+              Text(
+                'Enter your patient’s medication\n details.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Color(0xFF919191), fontSize: 24),
+              ),
+              SizedBox(height: height * 0.084),
+              TextField(
+                controller: _controller,
+                style: TextStyle(color: Color(0xFFD0D2D1)),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Color(0xFF292929),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color(0xFFA27AFC), width: 2),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color(0xFFA27AFC), width: 2),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color(0xFFA27AFC), width: 2),
+                  ),
+                  hintText: 'Enter medicine name',
+                  hintStyle: TextStyle(color: Colors.grey[500]),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.delete, color: Colors.grey),
+                    onPressed: () {
+                      _controller.clear();
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: height * 0.25,
+              ),
+              Center(
+                child: ElevatedButton(
+                    onPressed: () {},
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          right: width * 0.15,
+                          left: width * 0.15,
+                          top: width * 0.03,
+                          bottom: width * 0.03),
+                      child: Text('Next'),
+                    )),
+              ),
+              SizedBox(
+                height: height * 0.05,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

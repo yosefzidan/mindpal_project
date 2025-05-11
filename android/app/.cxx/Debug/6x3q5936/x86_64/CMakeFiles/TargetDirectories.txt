@@ -1,0 +1,2 @@
+C:/Users/youss/StudioProjects/MINDPAL/android/app/.cxx/Debug/6x3q5936/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/youss/StudioProjects/MINDPAL/android/app/.cxx/Debug/6x3q5936/x86_64/CMakeFiles/rebuild_cache.dir
