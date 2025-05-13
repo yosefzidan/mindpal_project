@@ -10,8 +10,6 @@ class SelectRole extends StatefulWidget {
 }
 
 class _SelectRoleState extends State<SelectRole> {
-  bool _isObscure = true;
-  bool _isObscure2 = true;
 
   @override
   Widget build(BuildContext context) {
