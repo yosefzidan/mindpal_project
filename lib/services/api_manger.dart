@@ -15,7 +15,7 @@ class ApiManger {
         url,
         headers: {
           'Content-Type': 'application/json',
-          'token': ApiConstants.Token,
+          'token': ApiConstants.Token!,
         },
         body: jsonEncode(patients.toJsonForPost()),
       );
@@ -37,7 +37,7 @@ class ApiManger {
       final response = await http.get(
         url,
         headers: {
-          'token': ApiConstants.Token,
+          'token': ApiConstants.Token!,
         },
       );
       final Map<String, dynamic> data = jsonDecode(response.body);
@@ -57,7 +57,7 @@ class ApiManger {
       final response = await http.get(
         url,
         headers: {
-          'token': ApiConstants.Token,
+          'token': ApiConstants.Token!,
         },
       );
 
@@ -82,7 +82,7 @@ class ApiManger {
         url,
         headers: {
           'Content-Type': 'application/json',
-          'token': ApiConstants.Token,
+          'token': ApiConstants.Token!,
         },
         body: jsonEncode(patients.toJson()),
       );
@@ -108,7 +108,7 @@ class ApiManger {
         url,
         headers: {
           'Content-Type': 'application/json',
-          'token': ApiConstants.Token,
+          'token': ApiConstants.Token!,
         },
         body: jsonEncode(doctor.toJsonForPost()),
       );
@@ -130,7 +130,7 @@ class ApiManger {
       final response = await http.get(
         url,
         headers: {
-          'token': ApiConstants.Token,
+          'token': ApiConstants.Token!,
         },
       );
       final Map<String, dynamic> data = jsonDecode(response.body);
@@ -148,7 +148,7 @@ class ApiManger {
       final response = await http.delete(
         url,
         headers: {
-          'token': ApiConstants.Token,
+          'token': ApiConstants.Token!,
           'Content-Type': 'application/json',
         },
       );
