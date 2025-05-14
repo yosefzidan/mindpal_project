@@ -14,12 +14,23 @@ import 'package:mindpal/login_screen.dart';
 import 'package:mindpal/patient_information.dart';
 import 'package:mindpal/patient_tab.dart';
 import 'package:mindpal/select_role.dart';
+import 'package:mindpal/services/api_constants.dart';
 import 'package:mindpal/success_add_patient.dart';
 import 'package:mindpal/success_page.dart';
 import 'package:mindpal/test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await loadTokenFromSharedPrefs();
+
   runApp(MyApp());
+}
+
+Future<void> loadTokenFromSharedPrefs() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  ApiConstants.Token = prefs.getString('token');
 }
 
 class MyApp extends StatelessWidget {

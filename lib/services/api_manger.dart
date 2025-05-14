@@ -1,21 +1,23 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:mindpal/models/PatientResponse.dart';
+import 'package:mindpal/models/DoctorResponse.dart';
+import 'package:mindpal/models/PatientResponseM.dart';
+import 'package:mindpal/models/SignInResponse.dart';
 import 'package:mindpal/services/api_constants.dart';
 import 'package:mindpal/services/end_points.dart';
 
 class ApiManger {
-  static Future<void> postPatient(Patient patient) async {
+  static Future<void> postPatient(Patients patients) async {
     Uri url = Uri.https(ApiConstants.baseUrl, EndPoints.patientApi);
     try {
       final response = await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
-          'token': ApiConstants.patientPostToken,
+          'token': ApiConstants.Token!,
         },
-        body: jsonEncode(patient.toJsonForPost()),
+        body: jsonEncode(patients.toJsonForPost()),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('✅ Patient added successfully');
@@ -29,23 +31,25 @@ class ApiManger {
     }
   }
 
-  static Future<List<Patient>> getAllPatients() async {
+  static Future<List<Patients>> getAllPatients() async {
     Uri url = Uri.https(ApiConstants.baseUrl, EndPoints.patientApi);
     try {
       final response = await http.get(
         url,
         headers: {
-          'token': ApiConstants.patientGetAllToken,
+          'token': ApiConstants.Token!,
         },
       );
-      final List data = jsonDecode(response.body);
-      return data.map((json) => Patient.fromJson(json)).toList();
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final List patientsJson = data['patients'];
+
+      return patientsJson.map((json) => Patients.fromJson(json)).toList();
     } catch (e) {
       throw e;
     }
   }
 
-  static Future<Patient> getPatientById(String id) async {
+  static Future<Patients> getPatientById(String id) async {
     final Uri url =
         Uri.https(ApiConstants.baseUrl, '${EndPoints.patientApi}/$id');
 
@@ -53,12 +57,12 @@ class ApiManger {
       final response = await http.get(
         url,
         headers: {
-          'token': ApiConstants.patientGetOneToken,
+          'token': ApiConstants.Token!,
         },
       );
 
       if (response.statusCode == 200) {
-        return Patient.fromJson(jsonDecode(response.body));
+        return Patients.fromJson(jsonDecode(response.body));
       } else {
         throw Exception(
             '❌ Failed to load patient: ${response.statusCode}\n${response.body}');
@@ -69,7 +73,7 @@ class ApiManger {
     }
   }
 
-  static Future<void> updatePatient(String id, Patient patient) async {
+  static Future<void> updatePatient(String id, Patients patients) async {
     final Uri url =
         Uri.https(ApiConstants.baseUrl, '${EndPoints.patientApi}/$id');
 
@@ -78,9 +82,9 @@ class ApiManger {
         url,
         headers: {
           'Content-Type': 'application/json',
-          'token': ApiConstants.patientUpdateToken,
+          'token': ApiConstants.Token!,
         },
-        body: jsonEncode(patient.toJson()),
+        body: jsonEncode(patients.toJson()),
       );
 
       if (response.statusCode == 200) {
@@ -94,4 +98,100 @@ class ApiManger {
       rethrow;
     }
   }
+
+  // doctor
+
+  static Future<void> postDoctor(Doctor doctor) async {
+    Uri url = Uri.https(ApiConstants.baseUrl, EndPoints.doctorsApi);
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'token': ApiConstants.Token!,
+        },
+        body: jsonEncode(doctor.toJsonForPost()),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('✅ Patient added successfully');
+      } else {
+        throw Exception(
+            '❌ Failed to add patient: ${response.statusCode}\n${response.body}');
+      }
+    } catch (e) {
+      print('❌ Exception in postPatient: $e');
+      rethrow;
+    }
+  }
+
+  static Future<List<Doctor>> getAllDoctor() async {
+    Uri url = Uri.https(ApiConstants.baseUrl, EndPoints.doctorsApi);
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'token': ApiConstants.Token!,
+        },
+      );
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final List doctorsJson = data['doctors'];
+
+      return doctorsJson.map((json) => Doctor.fromJson(json)).toList();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  static Future<void> deleteDoctor(String id) async {
+    Uri url = Uri.https(ApiConstants.baseUrl, '${EndPoints.doctorsApi}/$id');
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'token': ApiConstants.Token!,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Doctor deleted successfully');
+      } else {
+        print('Failed to delete doctor. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // signin
+
+  static Future<SignInResponse> postSignIn(SignInRequest signInRequest) async {
+    Uri url = Uri.https(ApiConstants.baseUrl, EndPoints.signinApi);
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(signInRequest.toJson()),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseBody = jsonDecode(response.body);
+        return SignInResponse.fromJson(responseBody);
+      } else {
+        throw Exception(
+            '❌ Failed to sign in: ${response.statusCode}\n${response.body}');
+      }
+    } catch (e) {
+      print('❌ Exception in postSignIn: $e');
+      rethrow;
+    }
+  }
+
+// Scan
+
+// Medicine
 }
