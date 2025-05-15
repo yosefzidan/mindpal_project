@@ -1,0 +1,25 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "mindpal-50007",
+          "appId": "1:741135549855:android:a51438d05fd44ea4b7a9aa",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "mindpal-50007",
+          "configurations": {
+            "android": "1:741135549855:android:a51438d05fd44ea4b7a9aa",
+            "ios": "1:741135549855:ios:3b42444c651da749b7a9aa",
+            "macos": "1:741135549855:ios:3b42444c651da749b7a9aa",
+            "web": "1:741135549855:web:0a7ad2430d21e0d8b7a9aa",
+            "windows": "1:741135549855:web:4e2ed3182edeaa8cb7a9aa"
+          }
+        }
+      }
+    }
+  }
+}
