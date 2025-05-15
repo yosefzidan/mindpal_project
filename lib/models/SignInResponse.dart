@@ -16,10 +16,10 @@ class SignInRequest {
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'password': password,
-      'role': role,
-      'deviceToken': deviceToken,
+      "name": name,
+      "password": password,
+      "role": role,
+      "deviceToken": deviceToken,
     };
   }
 }
