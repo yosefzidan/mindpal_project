@@ -170,6 +170,7 @@ class ApiManger {
     Uri url = Uri.https(ApiConstants.baseUrl, EndPoints.signinApi);
 
     try {
+      print('🔵 Sending SignInRequest: ${jsonEncode(signInRequest.toJson())}');
       final response = await http.post(
         url,
         headers: {

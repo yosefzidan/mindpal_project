@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
 import 'package:mindpal/home_admin_screen.dart';
@@ -17,6 +18,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   String? role;
 
+  Future<String?> getFcmToken() async {
+    await FirebaseMessaging.instance.requestPermission();
+    String? token = await FirebaseMessaging.instance.getToken();
+    print("📱 FCM Token: $token");
+    return token;
+  }
+
   Future<void> signIn() async {
     if (nameController.text.isEmpty ||
         passwordController.text.isEmpty ||
@@ -27,11 +35,13 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    String? deviceToken = await getFcmToken();
+
     final signInRequest = SignInRequest(
       name: nameController.text.trim(),
       password: passwordController.text.trim(),
       role: role!.toLowerCase(),
-      deviceToken: 'some_device_token',
+      deviceToken: deviceToken ?? '',
     );
 
     try {
@@ -43,13 +53,13 @@ class _LoginScreenState extends State<LoginScreen> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', response.token!);
         switch (role) {
-          case 'Doctor':
-            Navigator.pushNamed(context, '/doctorHome');
+          case 'doctor':
+            Navigator.pushNamed(context, HomeAdminScreen.routeName);
             break;
-          case 'Patient':
-            Navigator.pushNamed(context, '/patientHome');
+          case 'patient':
+            Navigator.pushNamed(context, HomeAdminScreen.routeName);
             break;
-          case 'Admin':
+          case 'admin':
             Navigator.pushNamed(context, HomeAdminScreen.routeName);
             break;
           default:
@@ -63,10 +73,11 @@ class _LoginScreenState extends State<LoginScreen> {
           SnackBar(content: Text(response.message ?? 'Login failed')),
         );
       }
-    } catch (e) {
-      // في حالة حدوث خطأ في الاتصال
+    } catch (e, stackTrace) {
+      print('Exception: $e');
+      print('StackTrace: $stackTrace');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to sign in')),
+        SnackBar(content: Text('Failed to sign in: $e')),
       );
     }
   }
@@ -162,14 +173,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               SizedBox(
-                height: height * 0.2,
+                height: height * 0.03,
               ),
               Text(
                 ' please select role',
                 style: AppStyle.gray16700,
               ),
               SizedBox(
-                height: height * 0.08,
+                height: 8,
               ),
               Container(
                 decoration: BoxDecoration(
@@ -189,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: AppStyle.gray22600,
                   ),
                   icon: Icon(Icons.arrow_drop_down, color: Color(0xFFA27AFC)),
-                  items: ["Patient", "Doctor", "Admin"].map((role) {
+                  items: ["patient", "doctor", "admin"].map((role) {
                     return DropdownMenuItem(
                       value: role,
                       child: Text(role, style: AppStyle.gray16700),
@@ -202,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
               ),
-              SizedBox(height: height * 0.2),
+              SizedBox(height: height * 0.05),
               Center(
                 child: ElevatedButton(
                     onPressed: signIn,

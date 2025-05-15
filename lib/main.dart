@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mindpal/add_medicine.dart';
 import 'package:mindpal/add_medicine_name.dart';
@@ -8,6 +10,7 @@ import 'package:mindpal/doctor_home_page.dart';
 import 'package:mindpal/doctor_tab.dart';
 import 'package:mindpal/done_medicine_screen.dart';
 import 'package:mindpal/done_screen.dart';
+import 'package:mindpal/firebase_options.dart';
 import 'package:mindpal/home_admin_screen.dart';
 import 'package:mindpal/home_tab.dart';
 import 'package:mindpal/login_screen.dart';
@@ -24,6 +27,24 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await loadTokenFromSharedPrefs();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  NotificationSettings settings =
+      await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('User granted permission for notifications');
+  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+    print('User granted provisional permission');
+  } else {
+    print('User declined or has not accepted permission');
+  }
 
   runApp(MyApp());
 }
@@ -61,7 +82,7 @@ class MyApp extends StatelessWidget {
         SuccessAddPatient.routeName: (context) => SuccessAddPatient(),
         Test.routeName: (context) => Test(),
       },
-      initialRoute: SelectRole.routeName,
+      initialRoute: LoginScreen.routeName,
     );
   }
 }
