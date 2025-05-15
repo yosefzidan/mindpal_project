@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mindpal/yosef/type_medicine.dart';
 
 class AddMedicineName extends StatefulWidget {
   static const String routeName = "AddMedicineName";
@@ -34,7 +35,7 @@ class _AddMedicineNameState extends State<AddMedicineName> {
                 style: TextStyle(color: Color(0xFF919191), fontSize: 24),
               ),
               SizedBox(height: height * 0.084),
-              TextField(
+              TextFormField(
                 controller: _controller,
                 style: TextStyle(color: Color(0xFFD0D2D1)),
                 decoration: InputDecoration(
@@ -71,7 +72,9 @@ class _AddMedicineNameState extends State<AddMedicineName> {
               ),
               Center(
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, TypeMedicine.routeName);
+                    },
                     child: Padding(
                       padding: EdgeInsets.only(
                           right: width * 0.15,

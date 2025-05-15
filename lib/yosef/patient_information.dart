@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/done_screen.dart';
+import 'package:mindpal/yosef/done_screen.dart';
 
 class PatientInformation extends StatefulWidget {
   static const String routeName = "PatientInformation";

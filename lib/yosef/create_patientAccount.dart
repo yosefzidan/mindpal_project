@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/home_admin_screen.dart';
+import 'package:mindpal/yosef/success_add_patient.dart';
 
-class CreateDoctorAccount extends StatefulWidget {
-  static const String routeName = "CreateDoctorAccount";
+class CreatePatientAccount extends StatefulWidget {
+  static const String routeName = "CreatePatientAccount";
 
   @override
-  State<CreateDoctorAccount> createState() => _CreateAccountScreenState();
+  State<CreatePatientAccount> createState() => _CreatePatientAccountState();
 }
 
-class _CreateAccountScreenState extends State<CreateDoctorAccount> {
+class _CreatePatientAccountState extends State<CreatePatientAccount> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
+  final TextEditingController doctorNameController = TextEditingController();
 
   bool _isObscure = true;
   bool _isObscure2 = true;
@@ -22,6 +23,7 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
     String name = nameController.text;
     String password = passwordController.text;
     String confirmPassword = confirmPasswordController.text;
+    String doctorName = doctorNameController.text;
 
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -32,7 +34,7 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
 
     if (password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("not fond name")),
+        SnackBar(content: Text("not password name")),
       );
       return;
     }
@@ -43,9 +45,15 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
       );
       return;
     }
+    if (doctorName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("not fond doctorName")),
+      );
+      return;
+    }
 
     try {
-      Navigator.pushNamed(context, HomeAdminScreen.routeName);
+      Navigator.pushNamed(context, SuccessAddPatient.routeName);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Something went wrong")),
@@ -57,7 +65,6 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: Colors.black,
       body: Padding(
@@ -69,9 +76,20 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
                 child: Image.asset(
               "assets/images/Untitled-1 copy.png",
             )),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              textAlign: TextAlign.center,
+              'Hey Admin please create \n an account for patient',
+              style: AppStyle.gray24700,
+            ),
+            SizedBox(
+              height: height * 0.03,
+            ),
             Center(
                 child: Text(
-              'Create Your Account',
+              'Create Patient Account',
               style: AppStyle.gray20500,
             )),
             SizedBox(
@@ -128,7 +146,7 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Color(0xFFA27AFC), width: 1),
+                  borderSide: BorderSide(color: Color(0xFFA27AFC), width: 2),
                 ),
                 hintText: 'Enter your Password',
                 hintStyle: TextStyle(color: Color(0xFF666666), fontSize: 17),
@@ -149,7 +167,7 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
               height: height * 0.028,
             ),
             Text(
-              "   Confirm password",
+              "  Confirm password",
               style: AppStyle.gray16700,
             ),
             SizedBox(
@@ -166,7 +184,7 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Color(0xFFA27AFC), width: 1),
+                  borderSide: BorderSide(color: Color(0xFFA27AFC), width: 2),
                 ),
                 hintText: 'Enter your Password',
                 hintStyle: TextStyle(color: Color(0xFF666666), fontSize: 17),
@@ -183,7 +201,40 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
                 ),
               ),
             ),
-            SizedBox(height: height * 0.09),
+            SizedBox(
+              height: height * 0.03,
+            ),
+            Text(
+              "  doctor’s Name",
+              style: AppStyle.gray16700,
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            TextFormField(
+              controller: doctorNameController,
+              style: TextStyle(fontSize: 17, color: Color(0xFFA6A6A6)),
+              decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color(0xFFEEEEEE), width: 1),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color(0xFFA27AFC), width: 2),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color(0xFFA27AFC), width: 1),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color(0xFFA27AFC), width: 1),
+                  ),
+                  hintText: 'Enter your Name',
+                  hintStyle: TextStyle(color: Color(0xFF666666), fontSize: 17)),
+            ),
+            SizedBox(height: height * 0.06),
             Center(
               child: ElevatedButton(
                   onPressed: handleAddAccount,

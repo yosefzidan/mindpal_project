@@ -1,26 +1,27 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:mindpal/add_medicine.dart';
-import 'package:mindpal/add_medicine_name.dart';
-import 'package:mindpal/choose_bottles.dart';
-import 'package:mindpal/create_DoctorAccount.dart';
-import 'package:mindpal/create_patientAccount.dart';
-import 'package:mindpal/doctor_home_page.dart';
-import 'package:mindpal/doctor_tab.dart';
-import 'package:mindpal/done_medicine_screen.dart';
-import 'package:mindpal/done_screen.dart';
-import 'package:mindpal/firebase_options.dart';
-import 'package:mindpal/home_admin_screen.dart';
-import 'package:mindpal/home_tab.dart';
-import 'package:mindpal/login_screen.dart';
-import 'package:mindpal/patient_information.dart';
-import 'package:mindpal/patient_tab.dart';
-import 'package:mindpal/select_role.dart';
 import 'package:mindpal/services/api_constants.dart';
-import 'package:mindpal/success_add_patient.dart';
-import 'package:mindpal/success_page.dart';
-import 'package:mindpal/test.dart';
+import 'package:mindpal/yosef/add_medicine.dart';
+import 'package:mindpal/yosef/add_medicine_name.dart';
+import 'package:mindpal/yosef/choose_bottles.dart';
+import 'package:mindpal/yosef/create_DoctorAccount.dart';
+import 'package:mindpal/yosef/create_patientAccount.dart';
+import 'package:mindpal/yosef/doctor_home_page.dart';
+import 'package:mindpal/yosef/doctor_tab.dart';
+import 'package:mindpal/yosef/done_medicine_screen.dart';
+import 'package:mindpal/yosef/done_screen.dart';
+import 'package:mindpal/yosef/firebase_options.dart';
+import 'package:mindpal/yosef/hafez.dart';
+import 'package:mindpal/yosef/home_admin_screen.dart';
+import 'package:mindpal/yosef/home_tab.dart';
+import 'package:mindpal/yosef/login_screen.dart';
+import 'package:mindpal/yosef/patient_information.dart';
+import 'package:mindpal/yosef/patient_tab.dart';
+import 'package:mindpal/yosef/select_role.dart';
+import 'package:mindpal/yosef/success_add_patient.dart';
+import 'package:mindpal/yosef/success_page.dart';
+import 'package:mindpal/yosef/type_medicine.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -81,6 +82,7 @@ class MyApp extends StatelessWidget {
         PatientTab.routeName: (context) => PatientTab(),
         SuccessAddPatient.routeName: (context) => SuccessAddPatient(),
         Test.routeName: (context) => Test(),
+        TypeMedicine.routeName: (context) => TypeMedicine()
       },
       initialRoute: LoginScreen.routeName,
     );

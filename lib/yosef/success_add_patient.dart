@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/patient_information.dart';
+import 'package:mindpal/yosef/patient_information.dart';
 
 class SuccessAddPatient extends StatelessWidget {
   static const String routeName = "SuccessAddPatient";

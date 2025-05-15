@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mindpal/add_medicine.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/home_admin_screen.dart';
+import 'package:mindpal/yosef/add_medicine.dart';
 
 class DoneScreen extends StatelessWidget {
   static const String routeName = "DoneScreen";
