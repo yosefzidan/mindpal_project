@@ -1,45 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/create_DoctorAccount.dart';
+import 'package:mindpal/yosef/create_patientAccount.dart';
 
-class DoctorTab extends StatefulWidget {
-  static const String routeName = "DoctorTab";
+class PatientTab extends StatefulWidget {
+  static const String routeName = "PatientTab";
 
   @override
-  DoctorTabState createState() => DoctorTabState();
+  PatientTabState createState() => PatientTabState();
 }
 
-class DoctorTabState extends State<DoctorTab> {
-  List<String> doctorNames = [
-    'Joo',
-    'hana',
-    'malak',
-    'Joo',
-    'hana',
-    'malak',
-    'Joo',
-    'hana',
-    'malak',
-    'Joo',
-    'hana',
-    'malak',
-    'Joo',
-    'hana',
-    'malak',
-    'Joo',
-    'hana',
-    'malak',
+class PatientTabState extends State<PatientTab> {
+  List<String> PatientNames = [
+    'yosef zidan',
+    'Eslam Zidan',
+    'soliman',
+    'yosef zidan',
+    'Eslam Zidan',
+    'soliman',
+    'yosef zidan',
+    'Eslam Zidan',
+    'soliman',
+    'yosef zidan',
+    'Eslam Zidan',
+    'soliman',
+    'yosef zidan',
+    'Eslam Zidan',
+    'soliman',
+    'yosef zidan',
+    'Eslam Zidan',
+    'soliman',
+    'yosef zidan',
+    'Eslam Zidan',
+    'soliman',
   ];
 
-  void _addDoctor() {
+  void _addPatient() {
     setState(() {
-      Navigator.pushNamed(context, CreateDoctorAccount.routeName);
+      Navigator.pushNamed(context, CreatePatientAccount.routeName);
     });
   }
 
   void _deleteDoctor(int index) {
     setState(() {
-      doctorNames.removeAt(index);
+      PatientNames.removeAt(index);
     });
   }
 
@@ -61,22 +64,22 @@ class DoctorTabState extends State<DoctorTab> {
               ),
               Center(
                 child: Text(
-                  'Add Another Doctor\nAccount',
+                  'Add Another Patient\nAccount',
                   textAlign: TextAlign.center,
                   style: AppStyle.gray24700,
                 ),
               ),
               SizedBox(height: height * 0.07),
               Text(
-                'Doctor Names',
+                'Patient Names',
                 style: AppStyle.gray24700,
               ),
               SizedBox(height: height * 0.04),
               Expanded(
                 child: ListView.builder(
-                  itemCount: doctorNames.length,
+                  itemCount: PatientNames.length,
                   itemBuilder: (context, index) {
-                    final doctorName = doctorNames[index];
+                    final doctorName = PatientNames[index];
                     return Container(
                       margin: EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
@@ -100,7 +103,7 @@ class DoctorTabState extends State<DoctorTab> {
               ),
               SizedBox(height: 16),
               GestureDetector(
-                onTap: _addDoctor,
+                onTap: _addPatient,
                 child: Center(
                   child: Text(
                     '+ Add Another Account To Your Table',

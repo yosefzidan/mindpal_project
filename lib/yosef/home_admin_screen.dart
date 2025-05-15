@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mindpal/create_patientAccount.dart';
-import 'package:mindpal/doctor_tab.dart';
-import 'package:mindpal/home_tab.dart';
-import 'package:mindpal/patient_tab.dart';
+import 'package:mindpal/yosef/doctor_tab.dart';
+import 'package:mindpal/yosef/home_tab.dart';
+import 'package:mindpal/yosef/patient_tab.dart';
 
 class HomeAdminScreen extends StatefulWidget {
   static const String routeName = "HomeAdminScreen";

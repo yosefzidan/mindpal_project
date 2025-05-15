@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/login_screen.dart';
+import 'package:mindpal/yosef/login_screen.dart';
 
 class SelectRole extends StatefulWidget {
   static const String routeName = "SelectRole";

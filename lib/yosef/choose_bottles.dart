@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mindpal/add_medicine_name.dart';
+import 'package:mindpal/yosef/add_medicine_name.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ChooseBottles extends StatefulWidget {
