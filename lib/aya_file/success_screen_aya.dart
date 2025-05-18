@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SuccessScreen extends StatelessWidget {
+  static const String routeName = "ChooSuccessScreenseBottles";
+
   final VoidCallback? onClose;
   final VoidCallback? onBackToHome;
 

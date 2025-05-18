@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mindpal/aya_file/madel_aya/patient_aya.dart';
 
 class EditPatientScreen extends StatefulWidget {
+  static const String routeName = "EditPatientScreen";
+
   final Patient patient;
 
   const EditPatientScreen({Key? key, required this.patient}) : super(key: key);
@@ -216,7 +218,7 @@ class _EditPatientScreenState extends State<EditPatientScreen> {
       appBar: AppBar(
         title: const Text('Edit Patient'),
         backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
+        foregroundColor: Color(0x41ffffff),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -400,7 +402,7 @@ class _EditPatientScreenState extends State<EditPatientScreen> {
                   onPressed: _savePatient,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
+                    foregroundColor: Color(0x41ffffff),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: const Text('Save Changes'),

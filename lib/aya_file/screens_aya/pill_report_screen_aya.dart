@@ -1,17 +1,19 @@
-import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 
-class PillReportScreen extends StatefulWidget {
+class PillReportScreen2 extends StatefulWidget {
+  static const String routeName = "PillReportScreen_aya";
+
   final String patientName;
 
-  const PillReportScreen({required this.patientName, Key? key})
+  const PillReportScreen2({required this.patientName, Key? key})
       : super(key: key);
 
   @override
-  _PillReportScreenState createState() => _PillReportScreenState();
+  _PillReportScreen2State createState() => _PillReportScreen2State();
 }
 
-class _PillReportScreenState extends State<PillReportScreen> {
+class _PillReportScreen2State extends State<PillReportScreen2> {
   int selectedTab = 1; // 0: Day, 1: Week, 2: Month
 
   // Example data for week/month
@@ -316,7 +318,7 @@ class _MedicationItem extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Colors.purpleAccent.withOpacity(0.2),
+              color: Color(0x12bc0ee3),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(

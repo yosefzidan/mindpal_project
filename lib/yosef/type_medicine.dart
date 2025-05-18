@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
+import 'package:mindpal/aya_file/medication_form_screen_aya.dart';
 
 class TypeMedicine extends StatefulWidget {
   static const String routeName = "TypeMedicine";
@@ -194,7 +195,10 @@ class _TypeMedicineState extends State<TypeMedicine> {
               ),
               Center(
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, MedicationFormScreen.routeName);
+                    },
                     child: Padding(
                       padding: EdgeInsets.only(
                           right: width * 0.15,

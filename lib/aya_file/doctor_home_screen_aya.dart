@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mindpal/aya_file/bottles_screen_aya.dart';
 import 'package:mindpal/aya_file/edit_user_screen_aya.dart';
+import 'package:mindpal/aya_file/home_page_aya.dart';
 
 class DoctorHomeScreen extends StatefulWidget {
+  static const String routeName = "DoctorHomeScreen";
+
   const DoctorHomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -212,20 +216,25 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.medication_outlined, color: Colors.white54),
-                const SizedBox(height: 4),
-                const Text(
-                  'Pills',
-                  style: TextStyle(
-                    color: Colors.white54,
-                    fontSize: 12,
-                    fontFamily: 'Inter',
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, BottlesScreen.routeName);
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.medication_outlined, color: Colors.white54),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Pills',
+                    style: TextStyle(
+                      color: Colors.white54,
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Column(
               mainAxisSize: MainAxisSize.min,
@@ -250,20 +259,25 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                 ),
               ],
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.insert_chart_outlined, color: Colors.white54),
-                const SizedBox(height: 4),
-                const Text(
-                  'Reports',
-                  style: TextStyle(
-                    color: Colors.white54,
-                    fontSize: 12,
-                    fontFamily: 'Inter',
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, HomePage.routeName);
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.insert_chart_outlined, color: Colors.white54),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Reports',
+                    style: TextStyle(
+                      color: Colors.white54,
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

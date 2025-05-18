@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/aya_file/radiology_report_screen_aya.dart';
+import 'package:mindpal/aya_file/screens_aya/pill_report_screen_aya.dart';
 import 'package:mindpal/aya_file/widgets_aya/bottom_nav_bar_aya.dart';
 
 class PillReportScreen extends StatefulWidget {
+  static const String routeName = "PillReportScreen";
+
   final String patientName;
 
   const PillReportScreen({required this.patientName, Key? key})
@@ -77,8 +80,16 @@ class _DailyStats extends StatelessWidget {
         const SizedBox(height: 16),
         const Text('10 SEP', style: TextStyle(color: Colors.white70)),
         ...[
-          _PillStatRow('Oxytocin', '10:00 AM', 'Taken'),
-          _PillStatRow('Naloxone', '04:00 PM', 'Skipped'),
+          InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, PillReportScreen2.routeName);
+              },
+              child: _PillStatRow('Oxytocin', '10:00 AM', 'Taken')),
+          InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, PillReportScreen2.routeName);
+              },
+              child: _PillStatRow('Naloxone', '04:00 PM', 'Skipped')),
         ],
         const Spacer(),
         Padding(

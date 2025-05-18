@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mindpal/aya_file/edit_bottle_screen_aya.dart';
 
 class BottlesScreen extends StatefulWidget {
+  static const String routeName = "BottlesScreen";
+
   final String patientName;
 
   const BottlesScreen({Key? key, required this.patientName}) : super(key: key);

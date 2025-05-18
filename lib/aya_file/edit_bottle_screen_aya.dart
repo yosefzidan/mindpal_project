@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EditBottleScreen extends StatefulWidget {
+  static const String routeName = "EditBottleScreen";
+
   final Map<String, String> bottle;
   final Function(Map<String, String>) onSave;
 

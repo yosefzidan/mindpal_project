@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mindpal/aya_file/save_success_screen_aya.dart';
 
 class EditUserScreen extends StatefulWidget {
+  static const String routeName = "EditUserScreen";
+
   final Map<String, dynamic> userData;
   final Function(Map<String, dynamic>) onSave;
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SaveSuccessScreen extends StatelessWidget {
+  static const String routeName = "SaveSuccessScreen";
+
   final String patientName;
 
   const SaveSuccessScreen({Key? key, required this.patientName})

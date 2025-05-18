@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatelessWidget {
+  static const String routeName = "BottomNavBar";
   final int selected; // 0: Home, 1: Reports
   const BottomNavBar({required this.selected, Key? key}) : super(key: key);
 

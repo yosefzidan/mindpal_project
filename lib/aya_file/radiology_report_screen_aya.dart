@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mindpal/aya_file/widgets_aya/bottom_nav_bar_aya.dart';
 
 class RadiologyReportScreen extends StatelessWidget {
+  static const String routeName = "RadiologyReportScreen";
+
   final String patientName;
 
   const RadiologyReportScreen({required this.patientName});

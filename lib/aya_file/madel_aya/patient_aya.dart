@@ -32,8 +32,6 @@ class Patient {
   final String concerns;
   final String questions;
   final String other;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   Patient({
     required this.id,
@@ -69,8 +67,6 @@ class Patient {
     required this.concerns,
     required this.questions,
     required this.other,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   Map<String, dynamic> toJson() {
@@ -108,8 +104,6 @@ class Patient {
       'concerns': concerns,
       'questions': questions,
       'other': other,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
@@ -148,8 +142,6 @@ class Patient {
       concerns: json['concerns'] as String,
       questions: json['questions'] as String,
       other: json['other'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
   }
 
@@ -221,8 +213,6 @@ class Patient {
       concerns: concerns ?? this.concerns,
       questions: questions ?? this.questions,
       other: other ?? this.other,
-      createdAt: createdAt,
-      updatedAt: DateTime.now(),
     );
   }
 }
