@@ -1,6 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:mindpal/aya_file/bottles_screen_aya.dart';
+import 'package:mindpal/aya_file/doctor_home_screen_aya.dart';
+import 'package:mindpal/aya_file/home_page_aya.dart';
+import 'package:mindpal/aya_file/medication_form_screen_aya.dart';
+import 'package:mindpal/aya_file/pill_report_screen_aya.dart';
+import 'package:mindpal/aya_file/screens_aya/pill_report_screen_aya.dart';
 import 'package:mindpal/services/api_constants.dart';
 import 'package:mindpal/yosef/add_medicine.dart';
 import 'package:mindpal/yosef/add_medicine_name.dart';
@@ -14,6 +20,7 @@ import 'package:mindpal/yosef/done_screen.dart';
 import 'package:mindpal/yosef/firebase_options.dart';
 import 'package:mindpal/yosef/hafez.dart';
 import 'package:mindpal/yosef/home_admin_screen.dart';
+import 'package:mindpal/yosef/home_patient.dart';
 import 'package:mindpal/yosef/home_tab.dart';
 import 'package:mindpal/yosef/login_screen.dart';
 import 'package:mindpal/yosef/patient_information.dart';
@@ -61,6 +68,39 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        colorScheme: ColorScheme(
+          brightness: Brightness.dark,
+          primary: Color(0xFFA27EFC),
+          onPrimary: Colors.white,
+          secondary: Color(0xFF292929),
+          onSecondary: Colors.white,
+          error: Colors.red,
+          onError: Colors.white,
+          surface: Color(0xffc5bebe),
+          onSurface: Colors.white,
+        ),
+        scaffoldBackgroundColor: Color(0xFF191919),
+        fontFamily: 'Inter',
+        // Make sure to add Inter font to pubspec.yaml
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white, fontSize: 16),
+          bodyMedium: TextStyle(color: Colors.white70, fontSize: 14),
+          titleLarge: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Color(0xFF292929),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+        ),
+      ),
       themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
       routes: {
@@ -82,7 +122,18 @@ class MyApp extends StatelessWidget {
         PatientTab.routeName: (context) => PatientTab(),
         SuccessAddPatient.routeName: (context) => SuccessAddPatient(),
         Test.routeName: (context) => Test(),
-        TypeMedicine.routeName: (context) => TypeMedicine()
+        TypeMedicine.routeName: (context) => TypeMedicine(),
+        HomePatient.routeName: (context) => HomePatient(),
+        //   aya
+        DoctorHomeScreen.routeName: (context) => DoctorHomeScreen(),
+        BottlesScreen.routeName: (context) =>
+            BottlesScreen(patientName: 'Ahmed Ali'),
+        PillReportScreen.routeName: (context) =>
+            PillReportScreen(patientName: "Ahmed Ali"),
+        PillReportScreen2.routeName: (context) =>
+            PillReportScreen2(patientName: 'Ahmed Ali'),
+        HomePage.routeName: (context) => HomePage(),
+        MedicationFormScreen.routeName: (context) => MedicationFormScreen(),
       },
       initialRoute: LoginScreen.routeName,
     );

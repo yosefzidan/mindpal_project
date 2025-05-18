@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SignInScreen extends StatelessWidget {
+  static const String routeName = "SignInScreen";
+
   const SignInScreen({Key? key}) : super(key: key);
 
   @override

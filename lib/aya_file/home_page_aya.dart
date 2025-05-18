@@ -3,6 +3,8 @@ import 'package:mindpal/aya_file/pill_report_screen_aya.dart';
 import 'package:mindpal/aya_file/widgets_aya/bottom_nav_bar_aya.dart';
 
 class HomePage extends StatelessWidget {
+  static const String routeName = "HomePage";
+
   final List<String> patients = [
     'Ahmed Ali',
     'Salma Elsaid',

@@ -3,6 +3,8 @@ import 'package:mindpal/aya_file/madel_aya/patient_aya.dart';
 import 'package:mindpal/aya_file/screens_aya/edit_patient_screen_aya.dart';
 
 class PatientDetailsScreen extends StatefulWidget {
+  static const String routeName = "PatientDetailsScreen";
+
   final Patient patient;
 
   const PatientDetailsScreen({Key? key, required this.patient})

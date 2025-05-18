@@ -1,9 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
+import 'package:mindpal/aya_file/doctor_home_screen_aya.dart';
 import 'package:mindpal/models/SignInResponse.dart';
 import 'package:mindpal/services/api_manger.dart';
 import 'package:mindpal/yosef/home_admin_screen.dart';
+import 'package:mindpal/yosef/home_patient.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -54,10 +56,10 @@ class _LoginScreenState extends State<LoginScreen> {
         await prefs.setString('token', response.token!);
         switch (role) {
           case 'doctor':
-            Navigator.pushNamed(context, HomeAdminScreen.routeName);
+            Navigator.pushNamed(context, DoctorHomeScreen.routeName);
             break;
           case 'patient':
-            Navigator.pushNamed(context, HomeAdminScreen.routeName);
+            Navigator.pushNamed(context, HomePatient.routeName);
             break;
           case 'admin':
             Navigator.pushNamed(context, HomeAdminScreen.routeName);
@@ -79,6 +81,24 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to sign in: $e')),
       );
+    }
+  }
+
+  void sign() {
+    switch (role) {
+      case 'doctor':
+        Navigator.pushNamed(context, DoctorHomeScreen.routeName);
+        break;
+      case 'patient':
+        Navigator.pushNamed(context, HomePatient.routeName);
+        break;
+      case 'admin':
+        Navigator.pushNamed(context, HomeAdminScreen.routeName);
+        break;
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Invalid role')),
+        );
     }
   }
 
@@ -216,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: height * 0.05),
               Center(
                 child: ElevatedButton(
-                    onPressed: signIn,
+                    onPressed: sign,
                     child: Padding(
                       padding: EdgeInsets.only(
                           right: width * 0.15,

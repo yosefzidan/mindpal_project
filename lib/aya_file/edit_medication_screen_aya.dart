@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mindpal/aya_file/save_success_screen_aya.dart';
 
 class EditMedicationScreen extends StatefulWidget {
+  static const String routeName = "EditMedicationScreen";
+
   final String bottleName;
 
   const EditMedicationScreen({Key? key, required this.bottleName})
