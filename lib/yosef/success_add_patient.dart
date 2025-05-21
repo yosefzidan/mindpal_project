@@ -2,8 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
 import 'package:mindpal/yosef/patient_information.dart';
 
-class SuccessAddPatient extends StatelessWidget {
+class SuccessAddPatient extends StatefulWidget {
   static const String routeName = "SuccessAddPatient";
+
+  @override
+  State<SuccessAddPatient> createState() => _SuccessAddPatientState();
+}
+
+class _SuccessAddPatientState extends State<SuccessAddPatient> {
+  String? name;
+
+  String? password;
+
+  String? doctorCode;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null) {
+      name = args['name'];
+      password = args['password'];
+      doctorCode = args['doctorCode'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +78,14 @@ class SuccessAddPatient extends StatelessWidget {
                 child: ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(
-                          context, PatientInformation.routeName);
+                        context,
+                        PatientInformation.routeName,
+                        arguments: {
+                          'name': name,
+                          'password': password,
+                          'doctorCode': doctorCode,
+                        },
+                      );
                     },
                     child: Padding(
                       padding: EdgeInsets.only(

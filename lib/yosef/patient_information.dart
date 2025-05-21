@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
+import 'package:mindpal/models/PatientResponseM.dart';
+import 'package:mindpal/services/api_manger.dart';
 import 'package:mindpal/yosef/done_screen.dart';
 
 class PatientInformation extends StatefulWidget {
@@ -10,6 +12,88 @@ class PatientInformation extends StatefulWidget {
 }
 
 class _PatientInformationState extends State<PatientInformation> {
+  String? name;
+  String? password;
+  String? doctorCode;
+  String? selectedGender;
+  final TextEditingController ageController = TextEditingController();
+  bool isLoading = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null) {
+      name = args['name'];
+      password = args['password'];
+      doctorCode = args['doctorCode'];
+    }
+  }
+
+  void handleSendPatientData() async {
+    if (isLoading) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    if (selectedGender == null || ageController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please select gender and enter age")),
+      );
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
+    final int? age = int.tryParse(ageController.text);
+    if (age == null || age <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please enter a valid age")),
+      );
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
+    if (name == null || password == null || doctorCode == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Missing user authentication data")),
+      );
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
+    try {
+      final newPatient = Patients(
+        name: name!,
+        password: password!,
+        age: age,
+        code: doctorCode,
+      );
+
+      await ApiManger.postPatient(newPatient);
+
+      setState(() {
+        isLoading = false;
+      });
+
+      Navigator.pushNamed(context, DoneScreen.routeName);
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Something went wrong: $e")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery
@@ -20,8 +104,6 @@ class _PatientInformationState extends State<PatientInformation> {
         .of(context)
         .size
         .width;
-    String? selectedGender;
-    String? selectedStage;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -80,7 +162,8 @@ class _PatientInformationState extends State<PatientInformation> {
               SizedBox(height: height * 0.05),
               Text("  Patient's age?*", style: AppStyle.gray16400),
               SizedBox(height: height * 0.02),
-              TextField(
+              TextFormField(
+                controller: ageController,
                 decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -111,17 +194,19 @@ class _PatientInformationState extends State<PatientInformation> {
               SizedBox(height: height * 0.02,),
               Center(
                 child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, DoneScreen.routeName);
-                    }
-                    , child: Padding(
-
-                  padding: EdgeInsets.only(right: width * 0.15,
-                      left: width * 0.15,
-                      top: width * 0.03,
-                      bottom: width * 0.03),
-                  child: Text('Next', style: AppStyle.black18700,),
-                )),
+                  onPressed: isLoading
+                      ? null
+                      : () {
+                          handleSendPatientData();
+                        },
+                  child: isLoading
+                      ? CircularProgressIndicator(color: Colors.white)
+                      : Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: width * 0.15, vertical: width * 0.03),
+                          child: Text('Next', style: AppStyle.black18700),
+                        ),
+                ),
               ),
               SizedBox(height: height * 0.04,)
 

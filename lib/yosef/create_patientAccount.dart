@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
+import 'package:mindpal/models/DoctorResponse.dart';
+import 'package:mindpal/services/api_manger.dart';
 import 'package:mindpal/yosef/success_add_patient.dart';
 
 class CreatePatientAccount extends StatefulWidget {
@@ -20,21 +22,17 @@ class _CreatePatientAccountState extends State<CreatePatientAccount> {
   bool _isObscure2 = true;
 
   void handleAddAccount() async {
-    String name = nameController.text;
+    String name = nameController.text.trim();
     String password = passwordController.text;
     String confirmPassword = confirmPasswordController.text;
-    String doctorName = doctorNameController.text;
+    String doctorName = doctorNameController.text.trim();
 
-    if (name.isEmpty) {
+    if (name.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty ||
+        doctorName.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("not fond name")),
-      );
-      return;
-    }
-
-    if (password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("not password name")),
+        SnackBar(content: Text("Please fill all fields")),
       );
       return;
     }
@@ -45,18 +43,32 @@ class _CreatePatientAccountState extends State<CreatePatientAccount> {
       );
       return;
     }
-    if (doctorName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("not fond doctorName")),
-      );
-      return;
-    }
-
     try {
-      Navigator.pushNamed(context, SuccessAddPatient.routeName);
+      List<Doctor> allDoctors = await ApiManger.getAllDoctor();
+
+      Doctor? matchedDoctor = allDoctors.firstWhere(
+        (doc) => (doc.name ?? '').toLowerCase() == doctorName.toLowerCase(),
+        orElse: () => Doctor(),
+      );
+
+      if (matchedDoctor.code == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Doctor not found")),
+        );
+        return;
+      }
+      Navigator.pushNamed(
+        context,
+        SuccessAddPatient.routeName,
+        arguments: {
+          'name': name,
+          'password': password,
+          'doctorCode': matchedDoctor.code,
+        },
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Something went wrong")),
+        SnackBar(content: Text("Error fetching doctors: $e")),
       );
     }
   }
