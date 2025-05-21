@@ -236,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: height * 0.05),
               Center(
                 child: ElevatedButton(
-                    onPressed: sign,
+                    onPressed: signIn,
                     child: Padding(
                       padding: EdgeInsets.only(
                           right: width * 0.15,
