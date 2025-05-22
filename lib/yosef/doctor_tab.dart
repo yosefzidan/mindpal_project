@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
+import 'package:mindpal/models/DoctorResponse.dart';
+import 'package:mindpal/services/api_manger.dart';
 import 'package:mindpal/yosef/create_doctor_account.dart';
 
 class DoctorTab extends StatefulWidget {
@@ -10,37 +12,53 @@ class DoctorTab extends StatefulWidget {
 }
 
 class DoctorTabState extends State<DoctorTab> {
-  List<String> doctorNames = [
-    'Joo',
-    'hana',
-    'malak',
-    'Joo',
-    'hana',
-    'malak',
-    'Joo',
-    'hana',
-    'malak',
-    'Joo',
-    'hana',
-    'malak',
-    'Joo',
-    'hana',
-    'malak',
-    'Joo',
-    'hana',
-    'malak',
-  ];
+  List<Doctor> doctors = [];
+  bool isLoading = true;
 
-  void _addDoctor() {
-    setState(() {
-      Navigator.pushNamed(context, CreateDoctorAccount.routeName);
-    });
+  @override
+  void initState() {
+    super.initState();
+    loadDoctors();
   }
 
-  void _deleteDoctor(int index) {
-    setState(() {
-      doctorNames.removeAt(index);
-    });
+  Future<void> loadDoctors() async {
+    try {
+      final fetchedDoctors = await ApiManger.getAllDoctor();
+      setState(() {
+        doctors = fetchedDoctors;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching doctors: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to load doctors")),
+      );
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void _addDoctor() {
+    Navigator.pushNamed(context, CreateDoctorAccount.routeName)
+        .then((_) => loadDoctors()); // Reload after returning from create page
+  }
+
+  void _deleteDoctor(String id, int index) async {
+    try {
+      await ApiManger.deleteDoctor(id);
+      setState(() {
+        doctors.removeAt(index);
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Doctor deleted successfully")),
+      );
+    } catch (e) {
+      print("Error deleting doctor: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to delete doctor")),
+      );
+    }
   }
 
   @override
@@ -56,9 +74,7 @@ class DoctorTabState extends State<DoctorTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: height * 0.1,
-              ),
+              SizedBox(height: height * 0.05),
               Center(
                 child: Text(
                   'Add Another Doctor\nAccount',
@@ -66,18 +82,23 @@ class DoctorTabState extends State<DoctorTab> {
                   style: AppStyle.gray24700,
                 ),
               ),
-              SizedBox(height: height * 0.07),
-              Text(
-                'Doctor Names',
-                style: AppStyle.gray24700,
-              ),
               SizedBox(height: height * 0.04),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: doctorNames.length,
-                  itemBuilder: (context, index) {
-                    final doctorName = doctorNames[index];
-                    return Container(
+              Text('Doctor Names', style: AppStyle.gray24700),
+              SizedBox(height: height * 0.02),
+              isLoading
+                  ? Center(
+                      child:
+                          CircularProgressIndicator(color: Color(0xFF292929)))
+                  : doctors.isEmpty
+                      ? Center(
+                          child: Text("No doctors found",
+                              style: AppStyle.gray16400))
+                      : Expanded(
+                          child: ListView.builder(
+                            itemCount: doctors.length,
+                            itemBuilder: (context, index) {
+                              final doctor = doctors[index];
+                              return Container(
                       margin: EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
                         color: Color(0xFF292929),
@@ -86,13 +107,14 @@ class DoctorTabState extends State<DoctorTab> {
                       ),
                       child: ListTile(
                         title: Text(
-                          doctorName,
-                          style: AppStyle.gray16400,
+                                    doctor.name ?? "Unknown",
+                                    style: AppStyle.gray16400,
                         ),
                         trailing: IconButton(
                           icon: Icon(Icons.delete, color: Colors.white),
-                          onPressed: () => _deleteDoctor(index),
-                        ),
+                                    onPressed: () =>
+                                        _deleteDoctor(doctor.id ?? '', index),
+                                  ),
                       ),
                     );
                   },
@@ -108,14 +130,11 @@ class DoctorTabState extends State<DoctorTab> {
                       color: Color(0xFFA27AFC),
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
-                      decoration: TextDecoration.underline,
                     ),
                   ),
                 ),
               ),
-              SizedBox(
-                height: height * 0.07,
-              )
+              SizedBox(height: height * 0.07),
             ],
           ),
         ),

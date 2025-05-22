@@ -208,8 +208,12 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
             Center(
               child: ElevatedButton(
                   onPressed: handleSendPatientData,
-                  child: Padding(
-                    padding: EdgeInsets.only(
+                  child: isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                              color: Color(0xFF292929)))
+                      : Padding(
+                          padding: EdgeInsets.only(
                         right: width * 0.15,
                         left: width * 0.15,
                         top: width * 0.03,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
+import 'package:mindpal/models/PatientResponseM.dart';
+import 'package:mindpal/services/api_manger.dart';
 import 'package:mindpal/yosef/create_patientAccount.dart';
 
 class PatientTab extends StatefulWidget {
@@ -10,41 +12,54 @@ class PatientTab extends StatefulWidget {
 }
 
 class PatientTabState extends State<PatientTab> {
-  List<String> PatientNames = [
-    'yosef zidan',
-    'Eslam Zidan',
-    'soliman',
-    'yosef zidan',
-    'Eslam Zidan',
-    'soliman',
-    'yosef zidan',
-    'Eslam Zidan',
-    'soliman',
-    'yosef zidan',
-    'Eslam Zidan',
-    'soliman',
-    'yosef zidan',
-    'Eslam Zidan',
-    'soliman',
-    'yosef zidan',
-    'Eslam Zidan',
-    'soliman',
-    'yosef zidan',
-    'Eslam Zidan',
-    'soliman',
-  ];
+  List<Patients> patients = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadPatients();
+  }
+
+  Future<void> loadPatients() async {
+    try {
+      final fetchedPatients = await ApiManger.getAllPatients();
+      setState(() {
+        patients = fetchedPatients;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching patients: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to load patients")),
+      );
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   void _addPatient() {
-    setState(() {
-      Navigator.pushNamed(context, CreatePatientAccount.routeName);
-    });
+    Navigator.pushNamed(context, CreatePatientAccount.routeName)
+        .then((_) => loadPatients()); // Reload after returning from create page
   }
 
-  void _deleteDoctor(int index) {
-    setState(() {
-      PatientNames.removeAt(index);
-    });
-  }
+  // void _deleteDoctor(String id, int index) async {
+  //   try {
+  //     await ApiManger.getPatientById(id);
+  //     setState(() {
+  //       patients.removeAt(index);
+  //     });
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Patient deleted successfully")),
+  //     );
+  //   } catch (e) {
+  //     print("Error deleting patient: $e");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Failed to delete doctor")),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +75,7 @@ class PatientTabState extends State<PatientTab> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: height * 0.1,
+                height: height * 0.05,
               ),
               Center(
                 child: Text(
@@ -69,18 +84,26 @@ class PatientTabState extends State<PatientTab> {
                   style: AppStyle.gray24700,
                 ),
               ),
-              SizedBox(height: height * 0.07),
+              SizedBox(height: height * 0.04),
               Text(
                 'Patient Names',
                 style: AppStyle.gray24700,
               ),
-              SizedBox(height: height * 0.04),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: PatientNames.length,
-                  itemBuilder: (context, index) {
-                    final doctorName = PatientNames[index];
-                    return Container(
+              SizedBox(height: height * 0.02),
+              isLoading
+                  ? Center(
+                      child:
+                          CircularProgressIndicator(color: Color(0xFF292929)))
+                  : patients.isEmpty
+                      ? Center(
+                          child: Text("No doctors found",
+                              style: AppStyle.gray16400))
+                      : Expanded(
+                          child: ListView.builder(
+                            itemCount: patients.length,
+                            itemBuilder: (context, index) {
+                              final patient = patients[index];
+                              return Container(
                       margin: EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
                         color: Color(0xFF292929),
@@ -89,13 +112,14 @@ class PatientTabState extends State<PatientTab> {
                       ),
                       child: ListTile(
                         title: Text(
-                          doctorName,
-                          style: AppStyle.gray16400,
+                                    patient.name ?? "Unknown",
+                                    style: AppStyle.gray16400,
                         ),
                         trailing: IconButton(
                           icon: Icon(Icons.delete, color: Colors.white),
-                          onPressed: () => _deleteDoctor(index),
-                        ),
+                                      onPressed: () {}
+                                      // => _deleteDoctor(patient.id??'',index),
+                                      ),
                       ),
                     );
                   },
@@ -111,13 +135,12 @@ class PatientTabState extends State<PatientTab> {
                       color: Color(0xFFA27AFC),
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
-                      decoration: TextDecoration.underline,
                     ),
                   ),
                 ),
               ),
               SizedBox(
-                height: height * 0.07,
+                height: height * 0.05,
               )
             ],
           ),
