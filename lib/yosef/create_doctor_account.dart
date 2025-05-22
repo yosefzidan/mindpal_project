@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
+import 'package:mindpal/models/DoctorResponse.dart';
+import 'package:mindpal/services/api_manger.dart';
 import 'package:mindpal/yosef/home_admin_screen.dart';
 
 class CreateDoctorAccount extends StatefulWidget {
@@ -14,26 +16,28 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
+  bool isLoading = false;
 
   bool _isObscure = true;
   bool _isObscure2 = true;
 
-  void handleAddAccount() async {
-    String name = nameController.text;
+  void handleSendPatientData() async {
+    String name = nameController.text.trim();
     String password = passwordController.text;
     String confirmPassword = confirmPasswordController.text;
+    if (isLoading) return;
 
-    if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("not fond name")),
-      );
-      return;
-    }
+    setState(() {
+      isLoading = true;
+    });
 
-    if (password.isEmpty) {
+    if (name.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("not fond name")),
+        SnackBar(content: Text("Please fill all fields")),
       );
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
@@ -41,14 +45,31 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Passwords do not match")),
       );
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
     try {
+      final newDoctor = Doctor(
+        name: name,
+        password: password,
+      );
+
+      await ApiManger.postDoctor(newDoctor);
+
+      setState(() {
+        isLoading = false;
+      });
+
       Navigator.pushNamed(context, HomeAdminScreen.routeName);
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Something went wrong")),
+        SnackBar(content: Text("Something went wrong: $e")),
       );
     }
   }
@@ -186,9 +207,13 @@ class _CreateAccountScreenState extends State<CreateDoctorAccount> {
             SizedBox(height: height * 0.09),
             Center(
               child: ElevatedButton(
-                  onPressed: handleAddAccount,
-                  child: Padding(
-                    padding: EdgeInsets.only(
+                  onPressed: handleSendPatientData,
+                  child: isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                              color: Color(0xFF292929)))
+                      : Padding(
+                          padding: EdgeInsets.only(
                         right: width * 0.15,
                         left: width * 0.15,
                         top: width * 0.03,

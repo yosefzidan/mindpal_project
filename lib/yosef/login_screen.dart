@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   String? role;
+  bool isLoading = false;
 
   Future<String?> getFcmToken() async {
     await FirebaseMessaging.instance.requestPermission();
@@ -47,10 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     try {
-      // إرسال البيانات عبر الـ API
       SignInResponse response = await ApiManger.postSignIn(signInRequest);
 
-      // إذا تم الرد بنجاح، انتقل إلى الشاشة المناسبة حسب الدور
       if (response.token != null) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', response.token!);
@@ -70,7 +69,6 @@ class _LoginScreenState extends State<LoginScreen> {
             );
         }
       } else {
-        // عرض رسالة الخطأ
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(response.message ?? 'Login failed')),
         );
@@ -237,8 +235,12 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: ElevatedButton(
                     onPressed: signIn,
-                    child: Padding(
-                      padding: EdgeInsets.only(
+                    child: isLoading
+                        ? Center(
+                            child: CircularProgressIndicator(
+                                color: Color(0xFF292929)))
+                        : Padding(
+                            padding: EdgeInsets.only(
                           right: width * 0.15,
                           left: width * 0.15,
                           top: width * 0.03,

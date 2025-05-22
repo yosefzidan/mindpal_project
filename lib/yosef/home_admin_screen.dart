@@ -42,7 +42,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
                   image: AssetImage('assets/images/icon-doctor-regular.png'),
                   label: 'Doctors',
                   index: 0),
-              const SizedBox(width: 20),
+              SizedBox(width: width * 0.25),
               buildNavItem(
                   image: AssetImage('assets/images/icon-patient-regular.png'),
                   label: 'Patients',

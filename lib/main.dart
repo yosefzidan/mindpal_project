@@ -11,7 +11,7 @@ import 'package:mindpal/services/api_constants.dart';
 import 'package:mindpal/yosef/add_medicine.dart';
 import 'package:mindpal/yosef/add_medicine_name.dart';
 import 'package:mindpal/yosef/choose_bottles.dart';
-import 'package:mindpal/yosef/create_DoctorAccount.dart';
+import 'package:mindpal/yosef/create_doctor_account.dart';
 import 'package:mindpal/yosef/create_patientAccount.dart';
 import 'package:mindpal/yosef/doctor_home_page.dart';
 import 'package:mindpal/yosef/doctor_tab.dart';
@@ -69,6 +69,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+            backgroundColor: Colors.black,
+            iconTheme: IconThemeData(
+              color: Color(0xFFA27EFC),
+            )),
         colorScheme: ColorScheme(
           brightness: Brightness.dark,
           primary: Color(0xFFA27EFC),
@@ -77,8 +82,24 @@ class MyApp extends StatelessWidget {
           onSecondary: Colors.white,
           error: Colors.red,
           onError: Colors.white,
-          surface: Color(0xffc5bebe),
-          onSurface: Colors.white,
+          surface: Colors.white,
+          onSurface: Color(0xFFD0D2D1),
+        ),
+
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: Colors.deepPurple,
+          behavior: SnackBarBehavior.floating,
+          elevation: 8,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          contentTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+          actionTextColor: Color(0xFFA27EFC),
+          insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         ),
         scaffoldBackgroundColor: Color(0xFF191919),
         fontFamily: 'Inter',
@@ -97,7 +118,6 @@ class MyApp extends StatelessWidget {
           fillColor: Color(0xFF292929),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
           ),
         ),
       ),
