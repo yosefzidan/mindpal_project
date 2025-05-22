@@ -11,7 +11,7 @@ import 'package:mindpal/services/api_constants.dart';
 import 'package:mindpal/yosef/add_medicine.dart';
 import 'package:mindpal/yosef/add_medicine_name.dart';
 import 'package:mindpal/yosef/choose_bottles.dart';
-import 'package:mindpal/yosef/create_DoctorAccount.dart';
+import 'package:mindpal/yosef/create_doctor_account.dart';
 import 'package:mindpal/yosef/create_patientAccount.dart';
 import 'package:mindpal/yosef/doctor_home_page.dart';
 import 'package:mindpal/yosef/doctor_tab.dart';
@@ -77,7 +77,7 @@ class MyApp extends StatelessWidget {
           onSecondary: Colors.white,
           error: Colors.red,
           onError: Colors.white,
-          surface: Color(0xffc5bebe),
+          surface: Color(0xffe6e1e1),
           onSurface: Colors.white,
         ),
         scaffoldBackgroundColor: Color(0xFF191919),

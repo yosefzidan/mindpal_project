@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/yosef/create_DoctorAccount.dart';
+import 'package:mindpal/yosef/create_doctor_account.dart';
 
 class DoctorTab extends StatefulWidget {
   static const String routeName = "DoctorTab";
