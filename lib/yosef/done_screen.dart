@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/yosef/add_medicine.dart';
+import 'package:mindpal/yosef/home_admin_screen.dart';
 
 class DoneScreen extends StatelessWidget {
   static const String routeName = "DoneScreen";
@@ -34,7 +34,7 @@ class DoneScreen extends StatelessWidget {
               Center(
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, AddMedicine.routeName);
+                      Navigator.pushNamed(context, HomeAdminScreen.routeName);
                     },
                     child: Padding(
                       padding: EdgeInsets.only(

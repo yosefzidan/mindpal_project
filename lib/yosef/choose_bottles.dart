@@ -13,6 +13,23 @@ class _TestScreenState extends State<ChooseBottles> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  String? code;
+
+  String bottle1 = 'bottle 1';
+  String bottle2 = 'bottle 2';
+  String bottle3 = 'bottle 3';
+  String bottle4 = 'bottle 4';
+  String bottle5 = 'bottle 5';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null) {
+      code = args['code'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +124,7 @@ class _TestScreenState extends State<ChooseBottles> {
                       InkWell(
                         onTap: () {
                           Navigator.pushNamed(
+                              arguments: {'code': code, 'num bottle': bottle1},
                               context, AddMedicineName.routeName);
                         },
                         child: Container(
@@ -124,7 +142,7 @@ class _TestScreenState extends State<ChooseBottles> {
                                 height: height * 0.033,
                               ),
                               Text(
-                                'first pill bottle',
+                                bottle1,
                                 style: TextStyle(
                                     fontSize: 10, color: Color(0xFFD0D2D1)),
                               ),
@@ -153,172 +171,208 @@ class _TestScreenState extends State<ChooseBottles> {
                           ),
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(right: width * 0.034),
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Color(0xFFA27EFC), width: 1),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        height: height * 0.4,
-                        width: width * 0.31,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: height * 0.033,
-                            ),
-                            Text(
-                              'first pill bottle',
-                              style: TextStyle(
-                                  fontSize: 10, color: Color(0xFFD0D2D1)),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Center(child: Image.asset('assets/images/U 1.png')),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              'empty',
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              '(0)pills',
-                              style: TextStyle(
-                                  fontSize: 12, color: Color(0xFFD0D2D1)),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(right: width * 0.034),
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Color(0xFFA27EFC), width: 1),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        height: height * 0.4,
-                        width: width * 0.31,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: height * 0.033,
-                            ),
-                            Text(
-                              'first pill bottle',
-                              style: TextStyle(
-                                  fontSize: 10, color: Color(0xFFD0D2D1)),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Center(child: Image.asset('assets/images/U 1.png')),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              'empty',
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              '(0)pills',
-                              style: TextStyle(
-                                  fontSize: 12, color: Color(0xFFD0D2D1)),
-                            )
-                          ],
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              arguments: {'code': code, 'num bottle': bottle2},
+                              context,
+                              AddMedicineName.routeName);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(right: width * 0.034),
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Color(0xFFA27EFC), width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          height: height * 0.4,
+                          width: width * 0.31,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: height * 0.033,
+                              ),
+                              Text(
+                                bottle2,
+                                style: TextStyle(
+                                    fontSize: 10, color: Color(0xFFD0D2D1)),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Center(
+                                  child: Image.asset('assets/images/U 1.png')),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                'empty',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.white),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                '(0)pills',
+                                style: TextStyle(
+                                    fontSize: 12, color: Color(0xFFD0D2D1)),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(right: width * 0.034),
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Color(0xFFA27EFC), width: 1),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        height: height * 0.4,
-                        width: width * 0.31,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: height * 0.033,
-                            ),
-                            Text(
-                              'first pill bottle',
-                              style: TextStyle(
-                                  fontSize: 10, color: Color(0xFFD0D2D1)),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Center(child: Image.asset('assets/images/U 1.png')),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              'empty',
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              '(0)pills',
-                              style: TextStyle(
-                                  fontSize: 12, color: Color(0xFFD0D2D1)),
-                            )
-                          ],
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              arguments: {'code': code, 'num bottle': bottle3},
+                              context,
+                              AddMedicineName.routeName);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(right: width * 0.034),
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Color(0xFFA27EFC), width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          height: height * 0.4,
+                          width: width * 0.31,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: height * 0.033,
+                              ),
+                              Text(
+                                bottle3,
+                                style: TextStyle(
+                                    fontSize: 10, color: Color(0xFFD0D2D1)),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Center(
+                                  child: Image.asset('assets/images/U 1.png')),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                'empty',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.white),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                '(0)pills',
+                                style: TextStyle(
+                                    fontSize: 12, color: Color(0xFFD0D2D1)),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(right: width * 0.034),
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Color(0xFFA27EFC), width: 1),
-                          borderRadius: BorderRadius.circular(15),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              arguments: {'code': code, 'num bottle': bottle4},
+                              context,
+                              AddMedicineName.routeName);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(right: width * 0.034),
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Color(0xFFA27EFC), width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          height: height * 0.4,
+                          width: width * 0.31,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: height * 0.033,
+                              ),
+                              Text(
+                                bottle4,
+                                style: TextStyle(
+                                    fontSize: 10, color: Color(0xFFD0D2D1)),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Center(
+                                  child: Image.asset('assets/images/U 1.png')),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                'empty',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.white),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                '(0)pills',
+                                style: TextStyle(
+                                    fontSize: 12, color: Color(0xFFD0D2D1)),
+                              )
+                            ],
+                          ),
                         ),
-                        height: height * 0.4,
-                        width: width * 0.31,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: height * 0.033,
-                            ),
-                            Text(
-                              'first pill bottle',
-                              style: TextStyle(
-                                  fontSize: 10, color: Color(0xFFD0D2D1)),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Center(child: Image.asset('assets/images/U 1.png')),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              'empty',
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              '(0)pills',
-                              style: TextStyle(
-                                  fontSize: 12, color: Color(0xFFD0D2D1)),
-                            )
-                          ],
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              arguments: {'code': code, 'num bottle': bottle5},
+                              context,
+                              AddMedicineName.routeName);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(right: width * 0.034),
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Color(0xFFA27EFC), width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          height: height * 0.4,
+                          width: width * 0.31,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: height * 0.033,
+                              ),
+                              Text(
+                                bottle5,
+                                style: TextStyle(
+                                    fontSize: 10, color: Color(0xFFD0D2D1)),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Center(
+                                  child: Image.asset('assets/images/U 1.png')),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                'empty',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.white),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                '(0)pills',
+                                style: TextStyle(
+                                    fontSize: 12, color: Color(0xFFD0D2D1)),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ],

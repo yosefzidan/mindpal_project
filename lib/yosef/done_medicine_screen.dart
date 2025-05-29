@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
+import 'package:mindpal/yosef/home_admin_screen.dart';
 
 class DoneMedicineScreen extends StatelessWidget {
   static const String routeName = "DoneMedicineScreen";
@@ -39,7 +40,9 @@ class DoneMedicineScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushNamed(context, HomeAdminScreen.routeName);
+                      },
                       child: Row(
                         children: [
                           Text(
