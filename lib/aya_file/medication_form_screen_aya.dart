@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mindpal/aya_file/success_screen_aya.dart';
+import 'package:mindpal/models/PatientResponseM.dart';
+import 'package:mindpal/services/api_manger.dart';
+import 'package:mindpal/yosef/done_medicine_screen.dart';
 
 class MedicationFormScreen extends StatefulWidget {
   static const String routeName = "MedicationFormScreen";
@@ -16,6 +18,14 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
   String? selectedInterval;
   DateTime? startDate;
   DateTime? endDate;
+  String? patientCode;
+
+  String? numBottle;
+
+  String? medicineName;
+
+  String? type;
+  bool isLoading = false;
 
   final List<String> hourGaps = [
     'Every 2 hours',
@@ -125,17 +135,72 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
     );
   }
 
+  void handleSendMedicineData() async {
+    if (isLoading) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    if (selectedTime == null ||
+        selectedHourGap == null ||
+        selectedInterval == null ||
+        startDate == null ||
+        endDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please select gender and enter age")),
+      );
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
+    try {
+      final newMedicine = Medicines(
+        name: medicineName,
+        dosage: '500',
+        schedule: selectedHourGap,
+        type: type,
+        startDate: startDate.toString(),
+        endDate: endDate.toString(),
+        code: patientCode,
+      );
+
+      await ApiManger.postMedicine(newMedicine);
+
+      setState(() {
+        isLoading = false;
+      });
+
+      Navigator.pushNamed(context, DoneMedicineScreen.routeName);
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Something went wrong: $e")),
+      );
+    }
+  }
+
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null) {
+      numBottle = args['numBottle'];
+      patientCode = args['patientCode'];
+      medicineName = args['medicineName'];
+      type = args['type'];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Enter your patient\'s medication details.'),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white70),
-          onPressed: () {},
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -271,21 +336,15 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () {
-                    if (selectedTime != null &&
-                        selectedHourGap != null &&
-                        selectedInterval != null &&
-                        startDate != null &&
-                        endDate != null) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const SuccessScreen(),
-                        ),
-                      );
-                    }
-                  },
-                  child: Text(
-                    (selectedTime != null &&
+                  onPressed: isLoading
+                      ? null
+                      : () {
+                          handleSendMedicineData();
+                        },
+                  child: isLoading
+                      ? CircularProgressIndicator(color: Colors.white)
+                      : Text(
+                          (selectedTime != null &&
                             selectedHourGap != null &&
                             selectedInterval != null &&
                             startDate != null &&

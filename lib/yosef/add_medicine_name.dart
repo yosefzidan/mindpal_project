@@ -9,7 +9,20 @@ class AddMedicineName extends StatefulWidget {
 }
 
 class _AddMedicineNameState extends State<AddMedicineName> {
-  TextEditingController _controller = TextEditingController();
+  TextEditingController medicineName = TextEditingController();
+  String? patientCode;
+
+  String? numBottle;
+
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null) {
+      numBottle = args['num bottle'];
+      patientCode = args['code'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +38,7 @@ class _AddMedicineNameState extends State<AddMedicineName> {
           child: Column(
             children: [
               Text(
-                'Hey Sarah this is your first\n bottle ! ',
+                'Hey Admin this is your first\n bottle ! ',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
@@ -36,7 +49,7 @@ class _AddMedicineNameState extends State<AddMedicineName> {
               ),
               SizedBox(height: height * 0.084),
               TextFormField(
-                controller: _controller,
+                controller: medicineName,
                 style: TextStyle(color: Color(0xFFD0D2D1)),
                 decoration: InputDecoration(
                   filled: true,
@@ -62,7 +75,7 @@ class _AddMedicineNameState extends State<AddMedicineName> {
                   suffixIcon: IconButton(
                     icon: Icon(Icons.delete, color: Colors.grey),
                     onPressed: () {
-                      _controller.clear();
+                      medicineName.clear();
                     },
                   ),
                 ),
@@ -73,7 +86,11 @@ class _AddMedicineNameState extends State<AddMedicineName> {
               Center(
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, TypeMedicine.routeName);
+                      Navigator.pushNamed(arguments: {
+                        'patientCode': patientCode,
+                        'medicineName': medicineName,
+                        'numBottle': numBottle
+                      }, context, TypeMedicine.routeName);
                     },
                     child: Padding(
                       padding: EdgeInsets.only(

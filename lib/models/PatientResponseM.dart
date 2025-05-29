@@ -130,7 +130,7 @@ class Patients {
 /// type : "tablet"
 /// startDate : "2025-04-14T00:00:00.000Z"
 /// endDate : "2025-04-21T00:00:00.000Z"
-/// prescribedTo : "680e46afa94ae296cbf6d8d3"
+/// code : "680e46afa94ae296cbf6d8d3"
 /// confirm : true
 /// __v : 0
 
@@ -143,7 +143,7 @@ class Medicines {
     this.type,
     this.startDate,
     this.endDate,
-    this.prescribedTo,
+    this.code,
     this.confirm,
     this.v,
   });
@@ -156,7 +156,7 @@ class Medicines {
     type = json['type'];
     startDate = json['startDate'];
     endDate = json['endDate'];
-    prescribedTo = json['prescribedTo'];
+    code = json['code'];
     confirm = json['confirm'];
     v = json['__v'];
   }
@@ -168,22 +168,20 @@ class Medicines {
   String? type;
   String? startDate;
   String? endDate;
-  String? prescribedTo;
+  String? code;
   bool? confirm;
   int? v;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['_id'] = id;
     map['name'] = name;
     map['dosage'] = dosage;
     map['schedule'] = schedule;
     map['type'] = type;
     map['startDate'] = startDate;
     map['endDate'] = endDate;
-    map['prescribedTo'] = prescribedTo;
+    map['code'] = code;
     map['confirm'] = confirm;
-    map['__v'] = v;
     return map;
   }
 }

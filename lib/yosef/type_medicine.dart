@@ -13,6 +13,13 @@ class _TypeMedicineState extends State<TypeMedicine> {
   final TextEditingController numAmountController = TextEditingController();
 
   final TextEditingController numPillsController = TextEditingController();
+  String? patientCode;
+
+  String? numBottle;
+
+  String? medicineName;
+
+  String? type;
 
   int selectedIndex = 0;
 
@@ -21,6 +28,22 @@ class _TypeMedicineState extends State<TypeMedicine> {
     'assets/images/GroupM.png',
     'assets/images/pill.png',
   ];
+  List<String> typeMedicine = [
+    'mashrob',
+    'bershama',
+    'copsola',
+  ];
+
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null) {
+      patientCode = args['patientCode'];
+      medicineName = args['medicineName'].toString();
+      numBottle = args['numBottle'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +97,7 @@ class _TypeMedicineState extends State<TypeMedicine> {
                       onTap: () {
                         setState(() {
                           selectedIndex = index;
+                          type = typeMedicine[selectedIndex];
                         });
                       },
                       child: AnimatedContainer(
@@ -196,8 +220,12 @@ class _TypeMedicineState extends State<TypeMedicine> {
               Center(
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(
-                          context, MedicationFormScreen.routeName);
+                      Navigator.pushNamed(arguments: {
+                        'patientCode': patientCode,
+                        'medicineName': medicineName,
+                        'numBottle': numBottle,
+                        'type': type
+                      }, context, MedicationFormScreen.routeName);
                     },
                     child: Padding(
                       padding: EdgeInsets.only(

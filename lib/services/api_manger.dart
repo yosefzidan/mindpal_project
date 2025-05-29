@@ -195,4 +195,74 @@ class ApiManger {
 // Scan
 
 // Medicine
+  static Future<void> postMedicine(Medicines medicines) async {
+    Uri url = Uri.https(ApiConstants.baseUrl, EndPoints.medicineApi);
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'token': ApiConstants.Token!,
+        },
+        body: jsonEncode(medicines.toJson()),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('✅ medicines added successfully');
+      } else {
+        throw Exception(
+            '❌ Failed to add medicines: ${response.statusCode}\n${response.body}');
+      }
+    } catch (e) {
+      print('❌ Exception in postMedicines: $e');
+      rethrow;
+    }
+  }
+
+  static Future<void> updateMedicine(String id, Medicines medicines) async {
+    final Uri url =
+        Uri.https(ApiConstants.baseUrl, '${EndPoints.medicineApi}/$id');
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'token': ApiConstants.Token!,
+        },
+        body: jsonEncode(medicines.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        print('✅ Medicine updated successfully');
+      } else {
+        throw Exception(
+            '❌ Failed to update Medicine: ${response.statusCode}\n${response.body}');
+      }
+    } catch (e) {
+      print('❌ Exception in updateMedicine: $e');
+      rethrow;
+    }
+  }
+
+  static Future<void> deleteMedicine(String id) async {
+    Uri url = Uri.https(ApiConstants.baseUrl, '${EndPoints.medicineApi}/$id');
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'token': ApiConstants.Token!,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Medicine deleted successfully');
+      } else {
+        print('Failed to delete Medicine. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
 }
