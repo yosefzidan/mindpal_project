@@ -88,7 +88,7 @@ class DoctorTabState extends State<DoctorTab> {
               isLoading
                   ? Center(
                       child:
-                          CircularProgressIndicator(color: Color(0xFF292929)))
+                          CircularProgressIndicator(color: Colors.deepPurple))
                   : doctors.isEmpty
                       ? Center(
                           child: Text("No doctors found",

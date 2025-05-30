@@ -215,16 +215,25 @@ class _TypeMedicineState extends State<TypeMedicine> {
                 ),
               ),
               SizedBox(
-                height: height * 0.15,
+                height: height * 0.1,
               ),
               Center(
                 child: ElevatedButton(
                     onPressed: () {
+                      if (type == null || numPillsController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  "Please select a medicine type and enter number of pills")),
+                        );
+                        return;
+                      }
                       Navigator.pushNamed(arguments: {
                         'patientCode': patientCode,
                         'medicineName': medicineName,
                         'numBottle': numBottle,
-                        'type': type
+                        'type': type,
+                        'numPills': numPillsController.text
                       }, context, MedicationFormScreen.routeName);
                     },
                     child: Padding(
@@ -233,7 +242,7 @@ class _TypeMedicineState extends State<TypeMedicine> {
                           left: width * 0.15,
                           top: width * 0.03,
                           bottom: width * 0.03),
-                      child: Text('Next'),
+                      child: Text('Next', style: AppStyle.black18700),
                     )),
               ),
             ],

@@ -1,4 +1,6 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:mindpal/main.dart';
 import 'package:mindpal/models/PatientResponseM.dart';
 import 'package:mindpal/services/api_manger.dart';
 import 'package:mindpal/yosef/done_medicine_screen.dart';
@@ -25,7 +27,9 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
   String? medicineName;
 
   String? type;
+  String? numPills;
   bool isLoading = false;
+  final dbRef = FirebaseDatabase.instance.ref();
 
   final List<String> hourGaps = [
     'Every 2 hours',
@@ -135,7 +139,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
     );
   }
 
-  void handleSendMedicineData() async {
+  Future<void> handleSendMedicineData() async {
     if (isLoading) return;
 
     setState(() {
@@ -148,7 +152,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
         startDate == null ||
         endDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please select gender and enter age")),
+        SnackBar(content: Text("Please fill all the required fields")),
       );
       setState(() {
         isLoading = false;
@@ -184,6 +188,28 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
     }
   }
 
+  Future<void> sendOrder() async {
+    if (numBottle == null ||
+        startDate == null ||
+        selectedTime == null ||
+        numPills == null) return;
+
+    String dateString =
+        '${startDate!.day.toString().padLeft(2, '0')}-${startDate!.month.toString().padLeft(2, '0')}-${startDate!.year}';
+    String timeString = selectedTime!.format(context);
+
+    final secondaryDbRef = FirebaseDatabase.instanceFor(
+      app: secondaryApp,
+      databaseURL: "https://OTHER_PROJECT.firebaseio.com",
+    ).ref();
+
+    await secondaryDbRef.child('AlzFix').child(numBottle!).set({
+      "Date": dateString,
+      "Clock": timeString,
+      "Time": numPills,
+    });
+  }
+
   void didChangeDependencies() {
     super.didChangeDependencies();
     final args =
@@ -193,6 +219,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
       patientCode = args['patientCode'];
       medicineName = args['medicineName'];
       type = args['type'];
+      numPills = args['numPills'];
     }
   }
 
@@ -338,8 +365,9 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
                   ),
                   onPressed: isLoading
                       ? null
-                      : () {
-                          handleSendMedicineData();
+                      : () async {
+                          // await sendOrder();
+                          await handleSendMedicineData();
                         },
                   child: isLoading
                       ? CircularProgressIndicator(color: Colors.white)
