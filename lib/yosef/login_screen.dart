@@ -29,6 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> signIn() async {
+    if (isLoading) return;
+
     if (nameController.text.isEmpty ||
         passwordController.text.isEmpty ||
         role == null) {
@@ -38,21 +40,26 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    String? deviceToken = await getFcmToken();
-
-    final signInRequest = SignInRequest(
-      name: nameController.text.trim(),
-      password: passwordController.text.trim(),
-      role: role!.toLowerCase(),
-      deviceToken: deviceToken ?? '',
-    );
+    setState(() {
+      isLoading = true;
+    });
 
     try {
+      String? deviceToken = await getFcmToken();
+
+      final signInRequest = SignInRequest(
+        name: nameController.text.trim(),
+        password: passwordController.text.trim(),
+        role: role!.toLowerCase(),
+        deviceToken: deviceToken ?? '',
+      );
+
       SignInResponse response = await ApiManger.postSignIn(signInRequest);
 
       if (response.token != null) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', response.token!);
+
         switch (role) {
           case 'doctor':
             Navigator.pushNamed(context, DoctorHomeScreen.routeName);
@@ -79,6 +86,10 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to sign in: $e')),
       );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -236,9 +247,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: ElevatedButton(
                     onPressed: signIn,
                     child: isLoading
-                        ? Center(
-                            child: CircularProgressIndicator(
-                                color: Color(0xFF292929)))
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                                right: width * 0.15,
+                                left: width * 0.15,
+                                top: width * 0.03,
+                                bottom: width * 0.03),
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.black,
+                                strokeWidth: 3,
+                              ),
+                            ),
+                          )
                         : Padding(
                             padding: EdgeInsets.only(
                           right: width * 0.15,

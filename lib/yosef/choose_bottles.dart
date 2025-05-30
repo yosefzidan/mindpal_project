@@ -15,11 +15,11 @@ class _TestScreenState extends State<ChooseBottles> {
   DateTime? _selectedDay;
   String? code;
 
-  String bottle1 = 'bottle 1';
-  String bottle2 = 'bottle 2';
-  String bottle3 = 'bottle 3';
-  String bottle4 = 'bottle 4';
-  String bottle5 = 'bottle 5';
+  String bottle1 = 'Motor1';
+  String bottle2 = 'Motor2';
+  String bottle3 = 'Motor3';
+  String bottle4 = 'Motor4';
+  String bottle5 = 'Motor5';
 
   @override
   void didChangeDependencies() {

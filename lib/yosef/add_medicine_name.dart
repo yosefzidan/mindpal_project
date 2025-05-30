@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mindpal/app_style.dart';
 import 'package:mindpal/yosef/type_medicine.dart';
 
 class AddMedicineName extends StatefulWidget {
@@ -98,7 +99,10 @@ class _AddMedicineNameState extends State<AddMedicineName> {
                           left: width * 0.15,
                           top: width * 0.03,
                           bottom: width * 0.03),
-                      child: Text('Next'),
+                      child: Text(
+                        'Next',
+                        style: AppStyle.black18700,
+                      ),
                     )),
               ),
               SizedBox(

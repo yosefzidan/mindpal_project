@@ -31,12 +31,24 @@ import 'package:mindpal/yosef/success_page.dart';
 import 'package:mindpal/yosef/type_medicine.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+late FirebaseApp secondaryApp;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await loadTokenFromSharedPrefs();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  secondaryApp = await Firebase.initializeApp(
+    name: 'SecondaryApp',
+    options: FirebaseOptions(
+      apiKey: "API_KEY_OF_OTHER_PROJECT",
+      appId: "APP_ID_OF_OTHER_PROJECT",
+      messagingSenderId: "SENDER_ID",
+      projectId: "PROJECT_ID",
+      databaseURL: "https://OTHER_PROJECT.firebaseio.com", // ده أهم شيء
+    ),
   );
 
   NotificationSettings settings =
