@@ -90,10 +90,12 @@ class PatientTabState extends State<PatientTab> {
                               final patient = patients[index];
                               return InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(arguments: {
-                                    'code': patient.code,
-                                    'id': patient.id
-                                  }, context, ChooseBottles.routeName);
+                                  Navigator.pushNamed(
+                                      context, ChooseBottles.routeName,
+                                      arguments: {
+                                        'patientCode': patient.code,
+                                        'patientId': patient.id,
+                                      });
                                 },
                                 child: Container(
                                   margin: EdgeInsets.symmetric(vertical: 8),

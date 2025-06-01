@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/yosef/home_admin_screen.dart';
+import 'package:mindpal/yosef/choose_bottles.dart';
 
 class DoneMedicineScreen extends StatelessWidget {
   static const String routeName = "DoneMedicineScreen";
@@ -41,7 +41,8 @@ class DoneMedicineScreen extends StatelessWidget {
                 children: [
                   InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, HomeAdminScreen.routeName);
+                        Navigator.popUntil(context,
+                            ModalRoute.withName(ChooseBottles.routeName));
                       },
                       child: Row(
                         children: [

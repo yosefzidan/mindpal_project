@@ -20,8 +20,8 @@ class _AddMedicineNameState extends State<AddMedicineName> {
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     if (args != null) {
-      numBottle = args['num bottle'];
-      patientCode = args['code'];
+      numBottle = args['numBottle'];
+      patientCode = args['patientCode'];
     }
   }
 
@@ -89,7 +89,7 @@ class _AddMedicineNameState extends State<AddMedicineName> {
                     onPressed: () {
                       Navigator.pushNamed(arguments: {
                         'patientCode': patientCode,
-                        'medicineName': medicineName,
+                        'medicineName': medicineName.text,
                         'numBottle': numBottle
                       }, context, TypeMedicine.routeName);
                     },
