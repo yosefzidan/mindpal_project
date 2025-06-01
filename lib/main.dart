@@ -41,13 +41,14 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   secondaryApp = await Firebase.initializeApp(
-    name: 'SecondaryApp',
+    name: 'secondaryApp',
     options: FirebaseOptions(
-      apiKey: "API_KEY_OF_OTHER_PROJECT",
-      appId: "APP_ID_OF_OTHER_PROJECT",
-      messagingSenderId: "SENDER_ID",
-      projectId: "PROJECT_ID",
-      databaseURL: "https://OTHER_PROJECT.firebaseio.com", // ده أهم شيء
+      apiKey: "AIzaSyAytd5KQK78uKb5mYxGxi-RYqYScCwCFpc",
+      appId: "1:267273489508:android:226a661a5d9f9f366d2371",
+      messagingSenderId: "267273489508",
+      projectId: "alzfix-1",
+      databaseURL:
+          "https://alzfix-1-default-rtdb.europe-west1.firebasedatabase.app",
     ),
   );
 

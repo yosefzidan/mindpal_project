@@ -145,6 +145,8 @@ class Medicines {
     this.endDate,
     this.code,
     this.confirm,
+    this.numPottle,
+    this.timeToTake,
     this.v,
   });
 
@@ -156,8 +158,10 @@ class Medicines {
     type = json['type'];
     startDate = json['startDate'];
     endDate = json['endDate'];
-    code = json['code'];
+    code = json['code']; // أو json['code'] لو كان الاسم كده عندك
     confirm = json['confirm'];
+    numPottle = json['numPottle'];
+    timeToTake = json['timeToTake'];
     v = json['__v'];
   }
 
@@ -169,6 +173,8 @@ class Medicines {
   String? startDate;
   String? endDate;
   String? code;
+  String? numPottle;
+  String? timeToTake;
   bool? confirm;
   int? v;
 
@@ -182,6 +188,8 @@ class Medicines {
     map['endDate'] = endDate;
     map['code'] = code;
     map['confirm'] = confirm;
+    map['numPottle'] = numPottle;
+    map['timeToTake'] = timeToTake;
     return map;
   }
 }

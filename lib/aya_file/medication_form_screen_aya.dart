@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mindpal/main.dart';
 import 'package:mindpal/models/PatientResponseM.dart';
 import 'package:mindpal/services/api_manger.dart';
@@ -37,6 +38,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
     'Every 6 hours',
     'Every 8 hours',
     'Every 12 hours',
+    'Every 24 hours',
   ];
 
   final List<String> intervals = [
@@ -44,6 +46,13 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
     'Every 5 days',
     'Every 7 days',
   ];
+
+  String formatTimeOfDayTo24(TimeOfDay time) {
+    final now = DateTime.now();
+    final dateTime =
+        DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    return DateFormat.Hm().format(dateTime); // "HH:mm"
+  }
 
   Future<void> _pickTime() async {
     final TimeOfDay? picked = await showTimePicker(
@@ -140,6 +149,8 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
   }
 
   Future<void> handleSendMedicineData() async {
+    print('patientCode = $patientCode');
+
     if (isLoading) return;
 
     setState(() {
@@ -169,6 +180,8 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
         startDate: startDate.toString(),
         endDate: endDate.toString(),
         code: patientCode,
+        numPottle: numBottle,
+        timeToTake: formatTimeOfDayTo24(selectedTime!), // صيغة 24 ساعة
       );
 
       await ApiManger.postMedicine(newMedicine);
@@ -366,7 +379,6 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
                   onPressed: isLoading
                       ? null
                       : () async {
-                          // await sendOrder();
                           await handleSendMedicineData();
                         },
                   child: isLoading

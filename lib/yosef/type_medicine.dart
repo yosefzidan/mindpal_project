@@ -228,13 +228,17 @@ class _TypeMedicineState extends State<TypeMedicine> {
                         );
                         return;
                       }
-                      Navigator.pushNamed(arguments: {
-                        'patientCode': patientCode,
-                        'medicineName': medicineName,
-                        'numBottle': numBottle,
-                        'type': type,
-                        'numPills': numPillsController.text
-                      }, context, MedicationFormScreen.routeName);
+                      Navigator.pushNamed(
+                        context,
+                        MedicationFormScreen.routeName,
+                        arguments: {
+                          "numBottle": numBottle,
+                          "patientCode": patientCode,
+                          "medicineName": medicineName,
+                          "type": type,
+                          "numPills": numPillsController.text,
+                        },
+                      );
                     },
                     child: Padding(
                       padding: EdgeInsets.only(

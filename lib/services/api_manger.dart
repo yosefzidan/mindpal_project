@@ -73,6 +73,37 @@ class ApiManger {
     }
   }
 
+  static Future<Patients> getPatientById1(String id) async {
+    final Uri url = Uri.https(ApiConstants.baseUrl, EndPoints.patientApi);
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'token': ApiConstants.Token!,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        PatientResponseM patientResponse = PatientResponseM.fromJson(data);
+
+        final patient = patientResponse.patients?.firstWhere(
+          (p) => p.id == id,
+          orElse: () => throw Exception('❌ Patient with id $id not found'),
+        );
+
+        return patient!;
+      } else {
+        throw Exception(
+            '❌ Failed to load patients: ${response.statusCode}\n${response.body}');
+      }
+    } catch (e) {
+      print('❌ Exception in getPatientById: $e');
+      rethrow;
+    }
+  }
+
   static Future<void> updatePatient(String id, Patients patients) async {
     final Uri url =
         Uri.https(ApiConstants.baseUrl, '${EndPoints.patientApi}/$id');
