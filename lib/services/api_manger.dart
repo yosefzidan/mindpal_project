@@ -144,13 +144,13 @@ class ApiManger {
         body: jsonEncode(doctor.toJsonForPost()),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print('✅ Patient added successfully');
+        print('✅ Doctor added successfully');
       } else {
         throw Exception(
-            '❌ Failed to add patient: ${response.statusCode}\n${response.body}');
+            '❌ Failed to add Doctor: ${response.statusCode}\n${response.body}');
       }
     } catch (e) {
-      print('❌ Exception in postPatient: $e');
+      print('❌ Exception in postDoctor: $e');
       rethrow;
     }
   }
@@ -164,6 +164,8 @@ class ApiManger {
           'token': ApiConstants.Token!,
         },
       );
+      print(response.body);
+
       final Map<String, dynamic> data = jsonDecode(response.body);
       final List doctorsJson = data['doctors'];
 

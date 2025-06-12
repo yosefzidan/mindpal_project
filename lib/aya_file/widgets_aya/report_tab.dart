@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/aya_file/edit_user_screen_aya.dart';
+import 'package:mindpal/aya_file/bottles_screen_aya.dart';
+import 'package:mindpal/aya_file/pill_report_screen_aya.dart';
 import 'package:mindpal/models/PatientResponseM.dart';
 import 'package:mindpal/services/api_manger.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class DoctorHomeScreen extends StatefulWidget {
-  static const String routeName = "DoctorHomeScreen";
-
+class ReportTab extends StatefulWidget {
+  static const String routeName = "reportTab";
 
   @override
-  State<DoctorHomeScreen> createState() => _DoctorHomeScreenState();
+  State<ReportTab> createState() => _ReportTabState();
 }
 
-class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
+class _ReportTabState extends State<ReportTab> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -46,26 +46,17 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
     }
   }
 
-  final List<String> dummyPatientNames = [
-    'Ahmed Ali',
-    'Salma Elsaid',
-    'Ramy Sabry',
-    'Amr Diab',
-  ];
-
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
 
-    final purple = const Color(0xFFA27AFC);
+    final purple = const Color(0xFFA892F5);
     final dark = const Color(0xFF191919);
     return Scaffold(
-      backgroundColor: dark,
+      backgroundColor: Color(0xFF191919),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Calendar Bar
             Column(
               children: [
                 TableCalendar(
@@ -117,33 +108,31 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                 ),
               ],
             ),
-            // Patient Names Title
+
+            // Calendar bar placeholder
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  // ... Calendar widget here ...
+                ],
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Patient Names',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
-                  Text(
-                    '${patients.length} Names',
-                    style: TextStyle(
-                      color: purple,
-                      fontSize: 14,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
+                  Text('Patient Names',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600)),
+                  Text('${patients.length} Names',
+                      style: TextStyle(color: Color(0xFFA892F5))),
                 ],
               ),
             ),
-            // Patient List
             isLoading
                 ? Center(
                     child: CircularProgressIndicator(color: Colors.deepPurple))
@@ -153,51 +142,48 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                             style: AppStyle.gray16400))
                     : Expanded(
                         child: ListView.builder(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 8,
-                ),
-                itemCount: patients.length,
-                itemBuilder: (context, index) {
-                            final patient = patients[index];
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 8,
+                            ),
+                            itemCount: patients.length,
+                            itemBuilder: (context, index) {
+                              final patient = patients[index];
 
-                            return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Color(0xFFA27AFC), width: 1.2),
-                                borderRadius: BorderRadius.circular(12),
-                      color: dark,
-                    ),
-                    child: ListTile(
-                      title: Text(
-                                  patient.name ?? 'll',
-                                  style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontFamily: 'Inter',
-                        ),
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: purple, width: 1.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: dark,
+                                ),
+                                child: ListTile(
+                                    title: Text(
+                                      patient.name ?? 'null',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, PillReportScreen.routeName,
+                                          arguments: {'patient': patient});
+                                    }),
+                              );
+                            }),
                       ),
-                      onTap: () {
-                                  print('$patient');
-                                  Navigator.pushNamed(
-                                      context, EditUserScreen.routeName,
-                                      arguments: {
-                                        'medicine': patient.medicines![index]
-                                      });
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-            // Space for bottom nav bar
-            SizedBox(
-              height: height * 0.005,
-            )
           ],
         ),
       ),
     );
   }
 }
+// avigator.push(
+//   context,
+//   MaterialPageRoute(
+//   builder: (_) =>
+//   BottlesScreen(patients: patient),
+//     ),
+//   ),

@@ -1,11 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:mindpal/aya_file/bottles_screen_aya.dart';
 import 'package:mindpal/aya_file/doctor_home_screen_aya.dart';
+import 'package:mindpal/aya_file/edit_user_screen_aya.dart';
 import 'package:mindpal/aya_file/home_page_aya.dart';
 import 'package:mindpal/aya_file/medication_form_screen_aya.dart';
 import 'package:mindpal/aya_file/pill_report_screen_aya.dart';
+import 'package:mindpal/aya_file/radiology_report_screen_aya.dart';
 import 'package:mindpal/aya_file/screens_aya/pill_report_screen_aya.dart';
 import 'package:mindpal/services/api_constants.dart';
 import 'package:mindpal/yosef/add_medicine.dart';
@@ -20,6 +21,7 @@ import 'package:mindpal/yosef/done_screen.dart';
 import 'package:mindpal/yosef/firebase_options.dart';
 import 'package:mindpal/yosef/hafez.dart';
 import 'package:mindpal/yosef/home_admin_screen.dart';
+import 'package:mindpal/yosef/home_doctor_screen.dart';
 import 'package:mindpal/yosef/home_patient.dart';
 import 'package:mindpal/yosef/home_tab.dart';
 import 'package:mindpal/yosef/login_screen.dart';
@@ -52,6 +54,8 @@ void main() async {
     ),
   );
 
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   NotificationSettings settings =
       await FirebaseMessaging.instance.requestPermission(
     alert: true,
@@ -60,12 +64,28 @@ void main() async {
   );
 
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    print('User granted permission for notifications');
+    print('✅ User granted permission for notifications');
   } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-    print('User granted provisional permission');
+    print('⚠️ User granted provisional permission');
   } else {
-    print('User declined or has not accepted permission');
+    print('❌ User declined or has not accepted permission');
   }
+
+  // ✅ اطبع التوكن
+  FirebaseMessaging.instance.getToken().then((token) {
+    print("📱 Device Token: $token");
+  });
+
+  // ✅ اسمع للإشعارات داخل التطبيق
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print("🔔 Foreground Notification");
+    print("Title: ${message.notification?.title}");
+    print("Body: ${message.notification?.body}");
+  });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print("📲 App opened from notification");
+  });
 
   runApp(MyApp());
 }
@@ -73,6 +93,13 @@ void main() async {
 Future<void> loadTokenFromSharedPrefs() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   ApiConstants.Token = prefs.getString('token');
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print("🔙 Notification received in background:");
+  print("Title: ${message.notification?.title}");
+  print("Body: ${message.notification?.body}");
 }
 
 class MyApp extends StatelessWidget {
@@ -83,7 +110,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-            backgroundColor: Colors.black,
+            backgroundColor: Color(0xFF191919),
             iconTheme: IconThemeData(
               color: Color(0xFFA27EFC),
             )),
@@ -157,16 +184,15 @@ class MyApp extends StatelessWidget {
         Test.routeName: (context) => Test(),
         TypeMedicine.routeName: (context) => TypeMedicine(),
         HomePatient.routeName: (context) => HomePatient(),
+        HomeDoctorScreen.routeName: (context) => HomeDoctorScreen(),
         //   aya
         DoctorHomeScreen.routeName: (context) => DoctorHomeScreen(),
-        BottlesScreen.routeName: (context) =>
-            BottlesScreen(patientName: 'Ahmed Ali'),
-        PillReportScreen.routeName: (context) =>
-            PillReportScreen(patientName: "Ahmed Ali"),
-        PillReportScreen2.routeName: (context) =>
-            PillReportScreen2(patientName: 'Ahmed Ali'),
+        PillReportScreen2.routeName: (context) => PillReportScreen2(),
+        PillReportScreen.routeName: (context) => PillReportScreen(),
         HomePage.routeName: (context) => HomePage(),
         MedicationFormScreen.routeName: (context) => MedicationFormScreen(),
+        RadiologyReportScreen.routeName: (context) => RadiologyReportScreen(),
+        EditUserScreen.routeName: (context) => EditUserScreen()
       },
       initialRoute: LoginScreen.routeName,
     );

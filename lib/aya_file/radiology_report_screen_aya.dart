@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/aya_file/widgets_aya/bottom_nav_bar_aya.dart';
+import 'package:mindpal/models/PatientResponseM.dart';
 
-class RadiologyReportScreen extends StatelessWidget {
-  static const String routeName = "RadiologyReportScreen";
+class RadiologyReportScreen extends StatefulWidget {
+  static const String routeName = "RadiologyReportScreen111";
 
-  final String patientName;
+  @override
+  State<RadiologyReportScreen> createState() => _RadiologyReportScreenState();
+}
 
-  const RadiologyReportScreen({required this.patientName});
+class _RadiologyReportScreenState extends State<RadiologyReportScreen> {
+  Patients? patients;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    if (args != null) {
+      patients = args['patient'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +31,7 @@ class RadiologyReportScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color(0xFF18181B),
         elevation: 0,
-        title: Text("$patientName radiology reports",
+        title: Text("${patients?.name ?? 'null'} radiology reports",
             style: TextStyle(color: Colors.white)),
         iconTheme: IconThemeData(color: Colors.white),
       ),
@@ -24,7 +39,8 @@ class RadiologyReportScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            Text("This is the report for the patient named $patientName.",
+            Text(
+                "This is the report for the patient named ${patients?.name ?? 'null'}.",
                 style: TextStyle(color: Colors.white)),
             SizedBox(height: 16),
             Row(

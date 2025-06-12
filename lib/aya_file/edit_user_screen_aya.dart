@@ -1,27 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/aya_file/save_success_screen_aya.dart';
+import 'package:mindpal/models/PatientResponseM.dart';
 
 class EditUserScreen extends StatefulWidget {
   static const String routeName = "EditUserScreen";
-
-  final Map<String, dynamic> userData;
-  final Function(Map<String, dynamic>) onSave;
-
-  const EditUserScreen({
-    Key? key,
-    required this.userData,
-    required this.onSave,
-  }) : super(key: key);
 
   @override
   State<EditUserScreen> createState() => _EditUserScreenState();
 }
 
 class _EditUserScreenState extends State<EditUserScreen> {
+  Medicines? medicine;
   late TextEditingController _nameController;
-  String _gender = 'Male';
-  late TextEditingController _ageController;
-  String _alzStage = 'The Third Stage';
   late TextEditingController _amountController;
   late TextEditingController _pillsPerDayController;
   TimeOfDay _pillTime = TimeOfDay(hour: 10, minute: 30);
@@ -51,30 +41,39 @@ class _EditUserScreenState extends State<EditUserScreen> {
   ];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    if (args != null) {
+      medicine = args['medicine'];
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
-    _nameController =
-        TextEditingController(text: widget.userData['name'] ?? '');
-    _gender = widget.userData['gender'] ?? 'Male';
-    _ageController =
-        TextEditingController(text: widget.userData['age']?.toString() ?? '');
-    _alzStage = widget.userData['alzStage'] ?? 'The Third Stage';
-    _amountController =
-        TextEditingController(text: widget.userData['amount'] ?? '');
+    _nameController = TextEditingController(text: medicine?.name ?? '');
+    _amountController = TextEditingController(text: medicine?.dosage ?? '');
     _pillsPerDayController =
-        TextEditingController(text: widget.userData['pillsPerDay'] ?? '');
-    _pillTime = widget.userData['pillTime'] ?? TimeOfDay(hour: 10, minute: 30);
-    _hoursApart = widget.userData['hoursApart'] ?? 'Every 2 hours';
-    _takingInterval = widget.userData['takingInterval'] ?? 'Every 3 days';
-    _startDate = widget.userData['startDate'] ?? DateTime.now();
-    _endDate = widget.userData['endDate'] ??
+        TextEditingController(text: medicine?.schedule ?? '');
+    _hoursApart = medicine?.schedule ?? 'Every 2 hours';
+    _takingInterval = medicine?.dosage ?? 'Every 3 days';
+    String timeString = medicine?.timeToTake ?? '10:30';
+    List<String> parts = timeString.split(':');
+    int hour = int.parse(parts[0]);
+    int minute = int.parse(parts[1]);
+    _pillTime = TimeOfDay(hour: hour, minute: minute);
+    _startDate = DateTime.tryParse(medicine?.startDate ?? '') ?? DateTime.now();
+
+    _endDate = DateTime.tryParse(medicine?.endDate ?? '') ??
         DateTime.now().add(const Duration(days: 30));
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _ageController.dispose();
     _amountController.dispose();
     _pillsPerDayController.dispose();
     super.dispose();
@@ -90,7 +89,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: const ColorScheme.dark(
-              primary: Color(0xFFA892F5),
+              primary: Color(0xFFA27AFC),
               surface: Color(0xFF23232B),
               onSurface: Colors.white,
             ),
@@ -119,7 +118,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: const ColorScheme.dark(
-              primary: Color(0xFFA892F5),
+              primary: Color(0xFFA27AFC),
               surface: Color(0xFF23232B),
               onSurface: Colors.white,
             ),
@@ -138,7 +137,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final purple = const Color(0xFFA892F5);
+    final purple = const Color(0xFFA27AFC);
     final dark = const Color(0xFF18181B);
 
     return Scaffold(
@@ -166,7 +165,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  widget.userData['name'] ?? '',
+                  medicine?.name ?? '',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -177,7 +176,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
                 const SizedBox(width: 8),
                 IconButton(
                   icon: const Icon(Icons.edit,
-                      color: Color(0xFFA892F5), size: 22),
+                      color: Color(0xFFA27AFC), size: 22),
                   tooltip: 'Edit patient details',
                   onPressed: () {
                     // Optionally scroll to the first field
@@ -199,15 +198,6 @@ class _EditUserScreenState extends State<EditUserScreen> {
             ),
             const SizedBox(height: 24),
             _buildTextField('Medicine Name', _nameController),
-            const SizedBox(height: 16),
-            _buildDropdown('Patient\'s gender*', _gender, genders,
-                (val) => setState(() => _gender = val)),
-            const SizedBox(height: 16),
-            _buildTextField('Patient\'s age*', _ageController,
-                keyboardType: TextInputType.number),
-            const SizedBox(height: 16),
-            _buildDropdown('Which stage of Alzheimer\'s*', _alzStage, alzStages,
-                (val) => setState(() => _alzStage = val)),
             const SizedBox(height: 16),
             _buildTextField('Amount(per one reception)', _amountController),
             const SizedBox(height: 16),
@@ -241,9 +231,6 @@ class _EditUserScreenState extends State<EditUserScreen> {
                 onPressed: () {
                   final updatedUser = {
                     'name': _nameController.text,
-                    'gender': _gender,
-                    'age': _ageController.text,
-                    'alzStage': _alzStage,
                     'amount': _amountController.text,
                     'pillsPerDay': _pillsPerDayController.text,
                     'pillTime': _pillTime,
@@ -252,7 +239,6 @@ class _EditUserScreenState extends State<EditUserScreen> {
                     'startDate': _startDate,
                     'endDate': _endDate,
                   };
-                  widget.onSave(updatedUser);
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => SaveSuccessScreen(
@@ -347,13 +333,13 @@ class _EditUserScreenState extends State<EditUserScreen> {
           decoration: BoxDecoration(
             color: const Color(0xFF23232B),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFA892F5)),
+            border: Border.all(color: const Color(0xFFA27AFC)),
           ),
           child: DropdownButton<String>(
             value: value,
             isExpanded: true,
             dropdownColor: const Color(0xFF23232B),
-            iconEnabledColor: const Color(0xFFA892F5),
+            iconEnabledColor: const Color(0xFFA27AFC),
             underline: const SizedBox(),
             style: const TextStyle(color: Colors.white, fontFamily: 'Inter'),
             items: items
@@ -392,11 +378,11 @@ class _EditUserScreenState extends State<EditUserScreen> {
             decoration: BoxDecoration(
               color: const Color(0xFF23232B),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFA892F5)),
+              border: Border.all(color: const Color(0xFFA27AFC)),
             ),
             child: Row(
               children: [
-                const Icon(Icons.access_time, color: Color(0xFFA892F5)),
+                const Icon(Icons.access_time, color: Color(0xFFA27AFC)),
                 const SizedBox(width: 8),
                 Text(
                   time.format(context),
@@ -432,7 +418,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
             decoration: BoxDecoration(
               color: const Color(0xFF23232B),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFA892F5)),
+              border: Border.all(color: const Color(0xFFA27AFC)),
             ),
             child: Row(
               children: [

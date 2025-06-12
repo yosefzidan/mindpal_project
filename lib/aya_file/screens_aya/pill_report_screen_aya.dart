@@ -1,13 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:mindpal/models/PatientResponseM.dart';
 
 class PillReportScreen2 extends StatefulWidget {
   static const String routeName = "PillReportScreen_aya";
 
-  final String patientName;
-
-  const PillReportScreen2({required this.patientName, Key? key})
-      : super(key: key);
 
   @override
   _PillReportScreen2State createState() => _PillReportScreen2State();
@@ -15,10 +12,10 @@ class PillReportScreen2 extends StatefulWidget {
 
 class _PillReportScreen2State extends State<PillReportScreen2> {
   int selectedTab = 1; // 0: Day, 1: Week, 2: Month
+  Patients? patients;
 
-  // Example data for week/month
   final List<List<int>> weekData = [
-    [1, 0, 1], // Day 1: [Taken, Not Taken, Taken]
+    [1, 0, 1],
     [1, 1, 1],
     [0, 0, 1],
     [1, 1, 0],
@@ -30,51 +27,61 @@ class _PillReportScreen2State extends State<PillReportScreen2> {
   final List<String> weekDays = const ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    if (args != null) {
+      patients = args['patient'];
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    String patientName = patients?.name ?? 'null';
+
     return Scaffold(
-      backgroundColor: const Color(0xFF181829),
+      backgroundColor: const Color(0xFF191919),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF181829),
+        backgroundColor: const Color(0xFF191919),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "${widget.patientName}'s pill reports",
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Text(
-              "This is the report for the patient named Ahmed Ali.",
-              style: TextStyle(color: Colors.grey, fontSize: 12),
-            ),
-          ],
+        title: Text(
+          "${patientName}'s pill reports",
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Tab Switcher
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildTabButton("Day", 0),
-                const SizedBox(width: 8),
-                _buildTabButton("Week", 1),
-                const SizedBox(width: 8),
-                _buildTabButton("Month", 2),
-              ],
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: BoxBorder.all(
+                    width: 1,
+                    color: Color(0xFFA27EFC),
+                  )),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildTabButton("Day", 0),
+                  const SizedBox(width: 8),
+                  _buildTabButton("Week", 1),
+                  const SizedBox(width: 8),
+                  _buildTabButton("Month", 2),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
-            // Date Selector
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -87,35 +94,18 @@ class _PillReportScreen2State extends State<PillReportScreen2> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Icon(Icons.calendar_today, color: Colors.purpleAccent),
+                const Icon(
+                  Icons.calendar_today,
+                  color: Color(0xFFA27EFC),
+                ),
               ],
             ),
             const SizedBox(height: 16),
-            // Stats Section
             Expanded(
               child: selectedTab == 0 ? _buildDailyView() : _buildBarChart(),
             ),
-            const SizedBox(height: 16),
-            const Text(
-              "This is the report for the patient named Ahmed Ali.",
-              style: TextStyle(color: Colors.grey, fontSize: 14),
-            ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF181829),
-        selectedItemColor: Colors.purpleAccent,
-        unselectedItemColor: Colors.grey,
-        currentIndex: 1,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.insert_chart),
-            label: "Reports",
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
       ),
     );
   }
@@ -125,10 +115,10 @@ class _PillReportScreen2State extends State<PillReportScreen2> {
       child: GestureDetector(
         onTap: () => setState(() => selectedTab = index),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
             color:
-                selectedTab == index ? Colors.purpleAccent : Colors.transparent,
+                selectedTab == index ? Color(0xFFA27EFC) : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
@@ -149,7 +139,7 @@ class _PillReportScreen2State extends State<PillReportScreen2> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF23234A),
+        color: const Color(0xFF191919),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -197,7 +187,7 @@ class _PillReportScreen2State extends State<PillReportScreen2> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF23234A),
+        color: const Color(0xFF292929),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -217,28 +207,27 @@ class _PillReportScreen2State extends State<PillReportScreen2> {
                 alignment: BarChartAlignment.spaceAround,
                 maxY: 3,
                 barGroups: List.generate(weekData.length, (index) {
+                  final taken = weekData[index][0].toDouble();
+                  final skipped = weekData[index][1].toDouble();
+                  final pending = weekData[index][2].toDouble();
+
                   return BarChartGroupData(
                     x: index,
                     barRods: [
                       BarChartRodData(
                         fromY: 0,
-                        toY: weekData[index][0].toDouble(),
-                        color: Colors.green,
-                        width: 8,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      BarChartRodData(
-                        fromY: 0,
-                        toY: weekData[index][1].toDouble(),
-                        color: Colors.red,
-                        width: 8,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      BarChartRodData(
-                        fromY: 0,
-                        toY: weekData[index][2].toDouble(),
-                        color: Colors.blue,
-                        width: 8,
+                        toY: taken + skipped + pending,
+                        width: 14,
+                        rodStackItems: [
+                          BarChartRodStackItem(
+                              0, taken, const Color(0xFFFFFF93)),
+                          BarChartRodStackItem(
+                              taken, taken + skipped, const Color(0xFFFFADA9)),
+                          BarChartRodStackItem(
+                              taken + skipped,
+                              taken + skipped + pending,
+                              const Color(0xFFBBA0FF)),
+                        ],
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ],
@@ -309,7 +298,7 @@ class _MedicationItem extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF2A2A4A),
+        color: const Color(0xFF292929),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -318,12 +307,12 @@ class _MedicationItem extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Color(0x12bc0ee3),
+              color: const Color(0x12bc0ee3),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(
               Icons.medication,
-              color: Colors.purpleAccent,
+              color: Color(0xFFA27EFC),
             ),
           ),
           const SizedBox(width: 12),
