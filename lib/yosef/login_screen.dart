@@ -1,10 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/aya_file/doctor_home_screen_aya.dart';
 import 'package:mindpal/models/SignInResponse.dart';
 import 'package:mindpal/services/api_manger.dart';
 import 'package:mindpal/yosef/home_admin_screen.dart';
+import 'package:mindpal/yosef/home_doctor_screen.dart';
 import 'package:mindpal/yosef/home_patient.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         switch (role) {
           case 'doctor':
-            Navigator.pushNamed(context, DoctorHomeScreen.routeName);
+            Navigator.pushNamed(context, HomeDoctorScreen.routeName);
             break;
           case 'patient':
             Navigator.pushNamed(context, HomePatient.routeName);
@@ -96,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void sign() {
     switch (role) {
       case 'doctor':
-        Navigator.pushNamed(context, DoctorHomeScreen.routeName);
+        Navigator.pushNamed(context, HomeDoctorScreen.routeName);
         break;
       case 'patient':
         Navigator.pushNamed(context, HomePatient.routeName);

@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/aya_file/edit_bottle_screen_aya.dart';
+import 'package:mindpal/models/PatientResponseM.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class BottlesScreen extends StatefulWidget {
   static const String routeName = "BottlesScreen";
 
-  final String patientName;
+  final Patients patients;
 
-  const BottlesScreen({Key? key, required this.patientName}) : super(key: key);
+  const BottlesScreen({Key? key, required this.patients}) : super(key: key);
 
   @override
   State<BottlesScreen> createState() => _BottlesScreenState();
 }
 
 class _BottlesScreenState extends State<BottlesScreen> {
-  int selectedDay = 8;
-  int selectedMonth = 1;
-  int selectedYear = 2020;
+  CalendarFormat _calendarFormat = CalendarFormat.week;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
 
   final List<String> months = [
     'January',
@@ -57,100 +59,6 @@ class _BottlesScreenState extends State<BottlesScreen> {
     },
   ];
 
-  Future<void> _pickMonthYear(BuildContext context) async {
-    int tempMonth = selectedMonth;
-    int tempYear = selectedYear;
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setStateDialog) {
-            return AlertDialog(
-              backgroundColor: const Color(0xFF23232B),
-              title: const Text(
-                'Select Month & Year',
-                style: TextStyle(color: Colors.white),
-              ),
-              content: Row(
-                children: [
-                  // Month Dropdown
-                  Expanded(
-                    child: DropdownButton<int>(
-                      value: tempMonth,
-                      dropdownColor: const Color(0xFF23232B),
-                      items: List.generate(
-                        12,
-                        (i) => DropdownMenuItem(
-                          value: i + 1,
-                          child: Text(
-                            months[i],
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      onChanged: (val) {
-                        setStateDialog(() {
-                          tempMonth = val!;
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  // Year Dropdown
-                  Expanded(
-                    child: DropdownButton<int>(
-                      value: tempYear,
-                      dropdownColor: const Color(0xFF23232B),
-                      items: years
-                          .map(
-                            (y) => DropdownMenuItem(
-                              value: y,
-                              child: Text(
-                                '$y',
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (val) {
-                        setStateDialog(() {
-                          tempYear = val!;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.white54),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedMonth = tempMonth;
-                      selectedYear = tempYear;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text(
-                    'OK',
-                    style: TextStyle(color: Color(0xFFA892F5)),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
 
   void _editBottle(Map<String, String> bottle) {
     Navigator.push(
@@ -173,8 +81,10 @@ class _BottlesScreenState extends State<BottlesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final purple = const Color(0xFFA892F5);
-    final dark = const Color(0xFF18181B);
+    var height = MediaQuery.of(context).size.height;
+    String patientName = widget.patients.name ?? 'null';
+    final purple = const Color(0xFFA27AFC);
+    final dark = const Color(0xFF191919);
 
     return Scaffold(
       backgroundColor: dark,
@@ -186,90 +96,53 @@ class _BottlesScreenState extends State<BottlesScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.white70,
-                          size: 18,
-                        ),
-                        onPressed: () => Navigator.pop(context),
+                  TableCalendar(
+                    daysOfWeekHeight: 30,
+                    firstDay: DateTime.utc(2020, 1, 1),
+                    lastDay: DateTime.utc(2030, 12, 31),
+                    focusedDay: _focusedDay,
+                    calendarFormat: _calendarFormat,
+                    availableCalendarFormats: {CalendarFormat.week: 'Week'},
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      });
+                    },
+                    headerStyle: HeaderStyle(
+                      formatButtonVisible: false,
+                      titleCentered: true,
+                      titleTextStyle:
+                          TextStyle(color: Color(0xFFD0D2D1), fontSize: 20),
+                      leftChevronIcon:
+                          Icon(Icons.chevron_left, color: Colors.white),
+                      rightChevronIcon:
+                          Icon(Icons.chevron_right, color: Colors.white),
+                    ),
+                    daysOfWeekStyle: DaysOfWeekStyle(
+                      weekdayStyle: TextStyle(color: Color(0xFFE6E6E6)),
+                      weekendStyle: TextStyle(color: Color(0xFFE6E6E6)),
+                    ),
+                    calendarStyle: CalendarStyle(
+                      outsideDaysVisible: false,
+                      defaultTextStyle: TextStyle(color: Color(0xFFA6A6A6)),
+                      weekendTextStyle: TextStyle(color: Color(0xFFA6A6A6)),
+                      selectedDecoration: BoxDecoration(
+                        color: Colors.white24,
+                        shape: BoxShape.circle,
                       ),
-                      GestureDetector(
-                        onTap: () => _pickMonthYear(context),
-                        child: Text(
-                          '${months[selectedMonth - 1]} $selectedYear',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Inter',
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
+                      todayDecoration: BoxDecoration(
+                        color: Color(0xFFA27AFC),
+                        shape: BoxShape.circle,
                       ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white70,
-                          size: 18,
-                        ),
-                        onPressed: () {},
-                      ),
-                    ],
+                    ),
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: List.generate(7, (index) {
-                      final days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-                      final dayNum = 6 + index;
-                      final isSelected = dayNum == selectedDay;
-                      return Column(
-                        children: [
-                          Text(
-                            days[index],
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontFamily: 'Inter',
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          GestureDetector(
-                            onTap: () => setState(() => selectedDay = dayNum),
-                            child: Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: isSelected ? purple : Colors.transparent,
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                '$dayNum',
-                                style: TextStyle(
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.white70,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Inter',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 8),
-                  const Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    color: Colors.white38,
+                  SizedBox(
+                    height: height * 0.02,
                   ),
                 ],
               ),
@@ -332,7 +205,7 @@ class _BottlesScreenState extends State<BottlesScreen> {
                           'This is the treatment schedule for the\npatient named ',
                     ),
                     TextSpan(
-                      text: widget.patientName,
+                      text: patientName,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -347,69 +220,6 @@ class _BottlesScreenState extends State<BottlesScreen> {
         ),
       ),
       // Bottom Navigation Bar
-      bottomNavigationBar: Container(
-        color: dark,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 32),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.medication_outlined, color: purple),
-                const SizedBox(height: 4),
-                Text(
-                  'pills',
-                  style: TextStyle(
-                    color: purple,
-                    fontSize: 12,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: purple,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: const EdgeInsets.all(12),
-                  child: const Icon(Icons.home_rounded, color: Colors.white),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Home',
-                  style: TextStyle(
-                    color: purple,
-                    fontSize: 12,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.insert_chart_outlined, color: Colors.white54),
-                const SizedBox(height: 4),
-                const Text(
-                  'Reports',
-                  style: TextStyle(
-                    color: Colors.white54,
-                    fontSize: 12,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 

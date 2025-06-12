@@ -1,98 +1,374 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:mindpal/yosef/create_patientAccount.dart';
 
-class Test extends StatefulWidget {
-  static const String routeName = "test";
+class PillReportScreen3 extends StatefulWidget {
+  static const String routeName = "PillReportScreen_aya2";
+
+  final String patientName;
+
+  const PillReportScreen3({required this.patientName, Key? key})
+      : super(key: key);
 
   @override
-  State<Test> createState() => _TestScreenState();
+  _PillReportScreen3State createState() => _PillReportScreen3State();
 }
 
-class _TestScreenState extends State<Test> {
-  int selectedIndex = 1;
+class _PillReportScreen3State extends State<PillReportScreen3> {
+  int selectedTab = 1; // 0: Day, 1: Week, 2: Month
 
-  final List<Widget> pages = [
-    CreatePatientAccount(),
-    Center(child: Text('Home')),
-    Center(child: Text('Patients')),
+  // Example data for week/month
+  final List<List<int>> weekData = [
+    [1, 0, 1], // Day 1: [Taken, Not Taken, Taken]
+    [1, 1, 1],
+    [0, 0, 1],
+    [1, 1, 0],
+    [1, 0, 0],
+    [1, 1, 1],
+    [0, 1, 1],
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
-  }
+  final List<String> weekDays = const ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: pages[selectedIndex],
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.black,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 15,
-        child: SizedBox(
-          height: 70,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              buildNavItem(
-                  image: AssetImage('assets/images/icon-doctor-regular.png'),
-                  label: 'Doctors',
-                  index: 0),
-              const SizedBox(width: 20),
-              buildNavItem(
-                  image: AssetImage('assets/images/icon-patient-regular.png'),
-                  label: 'Patients',
-                  index: 2),
-            ],
-          ),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF181829),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "${widget.patientName}'s pill reports",
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              "This is the report for the patient named Ahmed Ali.",
+              style: TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+          ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: GestureDetector(
-        onTap: () => _onItemTapped(1),
-        child: Container(
-          height: 70,
-          width: 70,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: selectedIndex == 1 ? Color(0xFF825DDA) : Color(0xFF825DDA),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Tab Switcher
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildTabButton("Day", 0),
+                const SizedBox(width: 8),
+                _buildTabButton("Week", 1),
+                const SizedBox(width: 8),
+                _buildTabButton("Month", 2),
+              ],
+            ),
+            const SizedBox(height: 16),
+            // Date Selector
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  selectedTab == 1
+                      ? "10 SEP - 17 SEP"
+                      : "First week of SEP 2023",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Icon(Icons.calendar_today, color: Colors.purpleAccent),
+              ],
+            ),
+            const SizedBox(height: 16),
+            // Stats Section
+            Expanded(
+              child: selectedTab == 0 ? _buildDailyView() : _buildBarChart(),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              "This is the report for the patient named Ahmed Ali.",
+              style: TextStyle(color: Colors.grey, fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF181829),
+        selectedItemColor: Colors.purpleAccent,
+        unselectedItemColor: Colors.grey,
+        currentIndex: 1,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.insert_chart),
+            label: "Reports",
           ),
-          child: ImageIcon(
-            AssetImage('assets/images/shop.png'),
-            color: Colors.white,
-            size: 35,
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTabButton(String label, int index) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => selectedTab = index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color:
+                selectedTab == index ? Colors.purpleAccent : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: selectedTab == index ? Colors.white : Colors.grey,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget buildNavItem(
-      {required AssetImage image, required String label, required int index}) {
-    return GestureDetector(
-      onTap: () => _onItemTapped(index),
+  Widget _buildDailyView() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF23234A),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ImageIcon(
-            image,
-            size: 24,
-            color: selectedIndex == index ? Color(0xFF825DDA) : Colors.white,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
+          const Text(
+            "Today's Medication",
             style: TextStyle(
-              color: selectedIndex == index ? Color(0xFF825DDA) : Colors.white,
-              fontSize: 12,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: ListView(
+              children: const [
+                _MedicationItem(
+                  name: "Oxytocin",
+                  time: "10:00 AM",
+                  status: "Taken",
+                  dosage: "10mg",
+                ),
+                _MedicationItem(
+                  name: "Naloxone",
+                  time: "04:00 PM",
+                  status: "Skipped",
+                  dosage: "5mg",
+                ),
+                _MedicationItem(
+                  name: "Vitamin D",
+                  time: "08:00 PM",
+                  status: "Pending",
+                  dosage: "1000IU",
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
   }
+
+  Widget _buildBarChart() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF23234A),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          const Text(
+            "Medication Adherence",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: 3,
+                barGroups: List.generate(weekData.length, (index) {
+                  return BarChartGroupData(
+                    x: index,
+                    barRods: [
+                      BarChartRodData(
+                        fromY: 0,
+                        toY: weekData[index][0].toDouble(),
+                        color: Color(0xFFFFFF93),
+                        width: 8,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      BarChartRodData(
+                        fromY: 0,
+                        toY: weekData[index][1].toDouble(),
+                        color: Color(0xFFFFADA9),
+                        width: 8,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      BarChartRodData(
+                        fromY: 0,
+                        toY: weekData[index][2].toDouble(),
+                        color: Color(0xFFBBA0FF),
+                        width: 8,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ],
+                  );
+                }),
+                titlesData: FlTitlesData(
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) {
+                        if (value < 0 || value >= weekDays.length)
+                          return const SizedBox();
+                        return Text(
+                          weekDays[value.toInt()],
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 12),
+                        );
+                      },
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }
+
+class _MedicationItem extends StatelessWidget {
+  final String name;
+  final String time;
+  final String status;
+  final String dosage;
+
+  const _MedicationItem({
+    required this.name,
+    required this.time,
+    required this.status,
+    required this.dosage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Color statusColor;
+    switch (status.toLowerCase()) {
+      case 'taken':
+        statusColor = Colors.green;
+        break;
+      case 'skipped':
+        statusColor = Colors.red;
+        break;
+      default:
+        statusColor = Colors.orange;
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2A4A),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Color(0x12bc0ee3),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(
+              Icons.medication,
+              color: Colors.purpleAccent,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  time,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                status,
+                style: TextStyle(
+                  color: statusColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                dosage,
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+

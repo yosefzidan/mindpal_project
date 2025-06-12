@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/aya_file/bottles_screen_aya.dart';
+import 'package:mindpal/aya_file/edit_user_screen_aya.dart';
+import 'package:mindpal/aya_file/madel_aya/patient_aya.dart';
+import 'package:mindpal/aya_file/screens_aya/edit_patient_screen_aya.dart';
+import 'package:mindpal/aya_file/screens_aya/patient_details_screen_aya.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,9 +50,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: BottlesScreen(
-        patientName: 'ffffff',
-      ),
+      home: EditUserScreen(),
 
       // PatientDetailsScreen(
       //   patient: Patient(

@@ -39,8 +39,8 @@ class _EditBottleScreenState extends State<EditBottleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final purple = const Color(0xFFA892F5);
-    final dark = const Color(0xFF18181B);
+    final purple = const Color(0xFFA27AFC);
+    final dark = const Color(0xFF191919);
 
     return Scaffold(
       backgroundColor: dark,

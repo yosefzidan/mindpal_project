@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mindpal/app_style.dart';
 import 'package:mindpal/main.dart';
 import 'package:mindpal/models/PatientResponseM.dart';
 import 'package:mindpal/services/api_manger.dart';
@@ -65,7 +66,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
               primary: Color(0xFFA892F5),
               onSurface: Colors.white,
             ),
-            dialogTheme: DialogThemeData(backgroundColor: Color(0xFF23232B)),
+            dialogTheme: DialogThemeData(backgroundColor: Color(0xFF292929)),
           ),
           child: child!,
         );
@@ -92,7 +93,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
               primary: Color(0xFFA892F5),
               onSurface: Colors.white,
             ),
-            dialogTheme: DialogThemeData(backgroundColor: Color(0xFF23232B)),
+            dialogTheme: DialogThemeData(backgroundColor: Color(0xFF292929)),
           ),
           child: child!,
         );
@@ -120,14 +121,18 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
       dropdownColor: Color(0xFF2C2C34),
       decoration: InputDecoration(
         filled: true,
-        fillColor: Color(0xFF2C2C34),
+        fillColor: Color(0xFF292929),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 12,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: Color(0xFF9E9E9E), width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Color(0xFF9E9E9E), width: 1),
         ),
       ),
       hint: Text(hint, style: TextStyle(color: Colors.white70)),
@@ -238,6 +243,8 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Enter your patient\'s medication details.'),
@@ -250,9 +257,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
             children: [
               const SizedBox(height: 8),
               Text(
-                'Time to take a pill',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+                'Time to take a pill', style: AppStyle.gray16700),
               const SizedBox(height: 8),
               GestureDetector(
                 onTap: _pickTime,
@@ -262,8 +267,12 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
                     vertical: 14,
                   ),
                   decoration: BoxDecoration(
-                    color: Color(0xFF2C2C34),
+                    color: Color(0xFF292929),
                     borderRadius: BorderRadius.circular(12),
+                    border: BoxBorder.all(
+                        color: Color(0xFF9E9E9E),
+                        width: 1,
+                        style: BorderStyle.solid),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,7 +283,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
                             : 'Select time',
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
-                      Icon(Icons.access_time, color: Color(0xFFA892F5)),
+                      Icon(Icons.access_time, color: Color(0xFFA27AFC)),
                     ],
                   ),
                 ),
@@ -282,8 +291,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
               const SizedBox(height: 24),
               Text(
                 'How many hours apart is it taken in a day?',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+                  style: AppStyle.gray16700),
               const SizedBox(height: 8),
               _buildDropdown<String>(
                 hint: 'Select hours apart',
@@ -293,9 +301,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Pill taking interval',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+                'Pill taking interval', style: AppStyle.gray16700),
               const SizedBox(height: 8),
               _buildDropdown<String>(
                 hint: 'Select days',
@@ -305,9 +311,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Start of course',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+                'Start of course', style: AppStyle.gray16700),
               const SizedBox(height: 8),
               GestureDetector(
                 onTap: () => _pickDate(isStart: true),
@@ -317,8 +321,12 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
                     vertical: 14,
                   ),
                   decoration: BoxDecoration(
-                    color: Color(0xFF2C2C34),
+                    color: Color(0xFF292929),
                     borderRadius: BorderRadius.circular(12),
+                    border: BoxBorder.all(
+                        color: Color(0xFF9E9E9E),
+                        width: 1,
+                        style: BorderStyle.solid),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -329,16 +337,14 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
                             : 'Select date',
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
-                      Icon(Icons.calendar_today, color: Color(0xFFA892F5)),
+                      Icon(Icons.calendar_today, color: Color(0xFFA27AFC)),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 24),
               Text(
-                'End of course',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+                'End of course', style: AppStyle.gray16700),
               const SizedBox(height: 8),
               GestureDetector(
                 onTap: () => _pickDate(isStart: false),
@@ -348,8 +354,12 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
                     vertical: 14,
                   ),
                   decoration: BoxDecoration(
-                    color: Color(0xFF2C2C34),
+                    color: Color(0xFF292929),
                     borderRadius: BorderRadius.circular(12),
+                    border: BoxBorder.all(
+                        color: Color(0xFF9E9E9E),
+                        width: 1,
+                        style: BorderStyle.solid),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -360,22 +370,14 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
                             : 'Select date',
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
-                      Icon(Icons.calendar_today, color: Color(0xFFA892F5)),
+                      Icon(Icons.calendar_today, color: Color(0xFFA27AFC)),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 40),
-              SizedBox(
-                width: double.infinity,
+              Center(
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFA892F5),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
                   onPressed: isLoading
                       ? null
                       : () async {
@@ -383,22 +385,24 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
                         },
                   child: isLoading
                       ? CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                          (selectedTime != null &&
+                      : Padding(
+                          padding: EdgeInsets.only(
+                              right: width * 0.15,
+                              left: width * 0.15,
+                              top: width * 0.03,
+                              bottom: width * 0.03),
+                          child: Text(
+                              (selectedTime != null &&
                             selectedHourGap != null &&
                             selectedInterval != null &&
                             startDate != null &&
                             endDate != null)
                         ? 'Confirm'
                         : 'Next',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                              style: AppStyle.black18700),
+                        ),
                 ),
-              ),
+              )
             ],
           ),
         ),

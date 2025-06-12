@@ -45,7 +45,7 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Icon(Icons.calendar_today, color: Color(0xFFA892F5)),
+                Icon(Icons.calendar_today, color: Color(0xFFA27AFC)),
               ],
             ),
           ),
@@ -72,7 +72,7 @@ class _EditMedicationScreenState extends State<EditMedicationScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFA892F5),
+                      backgroundColor: Color(0xFFA27AFC),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

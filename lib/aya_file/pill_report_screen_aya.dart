@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/aya_file/radiology_report_screen_aya.dart';
 import 'package:mindpal/aya_file/screens_aya/pill_report_screen_aya.dart';
-import 'package:mindpal/aya_file/widgets_aya/bottom_nav_bar_aya.dart';
+import 'package:mindpal/models/PatientResponseM.dart';
 
 class PillReportScreen extends StatefulWidget {
   static const String routeName = "PillReportScreen";
 
-  final String patientName;
-
-  const PillReportScreen({required this.patientName, Key? key})
-      : super(key: key);
 
   @override
   State<PillReportScreen> createState() => _PillReportScreenState();
@@ -17,6 +13,7 @@ class PillReportScreen extends StatefulWidget {
 
 class _PillReportScreenState extends State<PillReportScreen>
     with SingleTickerProviderStateMixin {
+  Patients? patients;
   late TabController _tabController;
 
   @override
@@ -32,15 +29,27 @@ class _PillReportScreenState extends State<PillReportScreen>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    if (args != null) {
+      patients = args['patient'];
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    String patient = patients?.name ?? "null";
+    Patients ppatient = patients!;
     return Scaffold(
       backgroundColor: const Color(0xFF18181B),
-      bottomNavigationBar: const BottomNavBar(selected: 1),
       appBar: AppBar(
         backgroundColor: const Color(0xFF18181B),
         elevation: 0,
         title: Text(
-          "${widget.patientName}'s pill reports",
+          "${patient}'s pill reports",
           style: const TextStyle(color: Colors.white),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
@@ -59,9 +68,11 @@ class _PillReportScreenState extends State<PillReportScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          _DailyStats(patientName: widget.patientName),
-          _WeeklyStats(patientName: widget.patientName),
-          _MonthlyStats(patientName: widget.patientName),
+          _DailyStats(
+            ppatients: ppatient,
+          ),
+          _WeeklyStats(patientName: patient),
+          _MonthlyStats(patientName: patient),
         ],
       ),
     );
@@ -69,9 +80,9 @@ class _PillReportScreenState extends State<PillReportScreen>
 }
 
 class _DailyStats extends StatelessWidget {
-  final String patientName;
+  final Patients ppatients;
 
-  const _DailyStats({required this.patientName, Key? key}) : super(key: key);
+  const _DailyStats({required this.ppatients, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -82,12 +93,14 @@ class _DailyStats extends StatelessWidget {
         ...[
           InkWell(
               onTap: () {
-                Navigator.pushNamed(context, PillReportScreen2.routeName);
+                Navigator.pushNamed(context, PillReportScreen2.routeName,
+                    arguments: {'patient': ppatients});
               },
               child: _PillStatRow('Oxytocin', '10:00 AM', 'Taken')),
           InkWell(
               onTap: () {
-                Navigator.pushNamed(context, PillReportScreen2.routeName);
+                Navigator.pushNamed(context, PillReportScreen2.routeName,
+                    arguments: {'patient': ppatients});
               },
               child: _PillStatRow('Naloxone', '04:00 PM', 'Skipped')),
         ],
@@ -104,13 +117,8 @@ class _DailyStats extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) =>
-                      RadiologyReportScreen(patientName: patientName),
-                ),
-              );
+              Navigator.pushNamed(context, RadiologyReportScreen.routeName,
+                  arguments: {"patient": ppatients});
             },
             child: const Text(
               "Patient's Radiology Reports",
