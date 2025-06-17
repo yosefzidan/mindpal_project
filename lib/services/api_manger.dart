@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:mindpal/models/DoctorResponse.dart';
 import 'package:mindpal/models/PatientResponseM.dart';
 import 'package:mindpal/models/SignInResponse.dart';
+import 'package:mindpal/models/single_patient_response_m.dart';
 import 'package:mindpal/services/api_constants.dart';
 import 'package:mindpal/services/end_points.dart';
 
@@ -62,7 +63,9 @@ class ApiManger {
       );
 
       if (response.statusCode == 200) {
-        return Patients.fromJson(jsonDecode(response.body));
+        final jsonData = jsonDecode(response.body);
+        final result = SinglePatientResponseM.fromJson(jsonData);
+        return result.patient!;
       } else {
         throw Exception(
             '❌ Failed to load patient: ${response.statusCode}\n${response.body}');

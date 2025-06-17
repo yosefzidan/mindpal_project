@@ -5,21 +5,31 @@ class DoctorResponse {
   DoctorResponse({
     this.message,
     this.doctor,
+    this.doctors,
   });
-
-  DoctorResponse.fromJson(dynamic json) {
-    message = json['message'];
-    doctor = json['doctor'] != null ? Doctor.fromJson(json['doctor']) : null;
-  }
 
   String? message;
   Doctor? doctor;
+  List<Doctor>? doctors;
+
+  DoctorResponse.fromJson(dynamic json) {
+    message = json['message'];
+    if (json['doctor'] != null) {
+      doctor = Doctor.fromJson(json['doctor']);
+    } else if (json['doctors'] != null) {
+      doctors =
+          List<Doctor>.from(json['doctors'].map((x) => Doctor.fromJson(x)));
+    }
+  }
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['message'] = message;
     if (doctor != null) {
-      map['doctor'] = doctor?.toJson();
+      map['doctor'] = doctor!.toJson();
+    }
+    if (doctors != null) {
+      map['doctors'] = doctors!.map((x) => x.toJson()).toList();
     }
     return map;
   }
@@ -40,7 +50,16 @@ class Doctor {
     this.id,
     this.code,
     this.createdAt,
+    this.deviceTokens,
   });
+
+  String? name;
+  String? password;
+  String? role;
+  String? id;
+  String? code;
+  String? createdAt;
+  String? deviceTokens; // ممكن يكون null أو List<String>
 
   Doctor.fromJson(dynamic json) {
     name = json['name'];
@@ -49,14 +68,8 @@ class Doctor {
     id = json['_id'];
     code = json['code'];
     createdAt = json['createdAt'];
+    deviceTokens = json['deviceTokens'];
   }
-
-  String? name;
-  String? password;
-  String? role;
-  String? id;
-  String? code;
-  String? createdAt;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -66,13 +79,14 @@ class Doctor {
     map['_id'] = id;
     map['code'] = code;
     map['createdAt'] = createdAt;
+    map['deviceTokens'] = deviceTokens;
     return map;
   }
 
   Map<String, dynamic> toJsonForPost() {
-    final map = <String, dynamic>{};
-    map['name'] = name;
-    map['password'] = password;
-    return map;
+    return {
+      'name': name,
+      'password': password,
+    };
   }
 }

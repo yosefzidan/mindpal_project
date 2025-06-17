@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mindpal/aya_file/bottles_screen_aya.dart';
 import 'package:mindpal/aya_file/doctor_home_screen_aya.dart';
 import 'package:mindpal/aya_file/home_page_aya.dart';
 import 'package:mindpal/aya_file/widgets_aya/report_tab.dart';
+import 'package:mindpal/services/api_constants.dart';
+import 'package:mindpal/yosef/login_screen.dart'; // تأكد إن دي صح
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeDoctorScreen extends StatefulWidget {
   static const String routeName = "kkkkkkkkkkkkkk";
@@ -13,6 +15,7 @@ class HomeDoctorScreen extends StatefulWidget {
 
 class _HomeDoctorScreenState extends State<HomeDoctorScreen> {
   int selectedIndex = 1;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final List<Widget> pages = [
     HomePage(),
@@ -34,8 +37,66 @@ class _HomeDoctorScreenState extends State<HomeDoctorScreen> {
     const dark = Color(0xFF191919);
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: dark,
-      body: pages[selectedIndex],
+
+      // ✅ Drawer جانبي
+      drawer: Container(
+        width: width * 0.6,
+        color: Colors.grey[900],
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: purple),
+              child: Text(
+                'Menu',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.logout, color: Colors.red),
+              title: Text('Logout', style: TextStyle(color: Colors.white)),
+              onTap: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.clear(); // 🧹 يمسح كل حاجة بدل remove واحدة واحدة
+                ApiConstants.Token = '';
+
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  LoginScreen.routeName,
+                  (route) => false,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+
+      body: Stack(
+        children: [
+          pages[selectedIndex],
+
+          // ✅ زر فتح الـ Drawer في الزاوية العليا
+          Positioned(
+            top: 40,
+            left: 16,
+            child: GestureDetector(
+              onTap: () {
+                _scaffoldKey.currentState?.openDrawer();
+              },
+              child: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white24,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(Icons.menu, color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+
       bottomNavigationBar: BottomAppBar(
         height: height * 0.14,
         color: dark,

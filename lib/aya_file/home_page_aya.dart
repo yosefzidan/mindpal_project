@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/aya_file/bottles_screen_aya.dart';
 import 'package:mindpal/models/PatientResponseM.dart';
 import 'package:mindpal/services/api_manger.dart';
+import 'package:mindpal/yosef/choose_bottle_update.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HomePage extends StatefulWidget {
@@ -149,32 +149,35 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context, index) {
                               final patient = patients[index];
 
-                              return Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: purple, width: 1.2),
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: dark,
-                                  ),
-                                  child: ListTile(
-                                    title: Text(
-                                      patient.name ?? 'null',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontFamily: 'Inter',
-                                      ),
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, ChooseBottleUpdate.routeName,
+                                      arguments: {
+                                        'patientCode': patient.code,
+                                        'patientId': patient.id,
+                                      });
+                                },
+                                child: Container(
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: purple, width: 1.2),
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: dark,
                                     ),
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) =>
-                                            BottlesScreen(patients: patient),
+                                    child: ListTile(
+                                      title: Text(
+                                        patient.name ?? 'null',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontFamily: 'Inter',
+                                        ),
                                       ),
-                                    ),
-                                  ));
+                                    )),
+                              );
                             }),
             ),
           ],

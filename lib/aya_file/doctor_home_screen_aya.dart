@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/aya_file/edit_user_screen_aya.dart';
 import 'package:mindpal/models/PatientResponseM.dart';
 import 'package:mindpal/services/api_manger.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -56,6 +55,7 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
 
     final purple = const Color(0xFFA27AFC);
     final dark = const Color(0xFF191919);
@@ -85,6 +85,8 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                     });
                   },
                   headerStyle: HeaderStyle(
+                    leftChevronMargin: EdgeInsets.only(left: width * 0.16),
+                    rightChevronMargin: EdgeInsets.only(right: width * 0.1),
                     formatButtonVisible: false,
                     titleCentered: true,
                     titleTextStyle:
@@ -178,14 +180,6 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen> {
                           fontFamily: 'Inter',
                         ),
                       ),
-                      onTap: () {
-                                  print('$patient');
-                                  Navigator.pushNamed(
-                                      context, EditUserScreen.routeName,
-                                      arguments: {
-                                        'medicine': patient.medicines![index]
-                                      });
-                      },
                     ),
                   );
                 },

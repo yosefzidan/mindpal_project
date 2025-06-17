@@ -3,20 +3,20 @@
     "platforms": {
       "android": {
         "default": {
-          "projectId": "mindpal-50007",
-          "appId": "1:741135549855:android:a51438d05fd44ea4b7a9aa",
+          "projectId": "mindpal-1742f",
+          "appId": "1:828032333910:android:f92a64f52512c277c4e3f7",
           "fileOutput": "android/app/google-services.json"
         }
       },
       "dart": {
         "lib/firebase_options.dart": {
-          "projectId": "mindpal-50007",
+          "projectId": "mindpal-1742f",
           "configurations": {
-            "android": "1:741135549855:android:a51438d05fd44ea4b7a9aa",
-            "ios": "1:741135549855:ios:3b42444c651da749b7a9aa",
-            "macos": "1:741135549855:ios:3b42444c651da749b7a9aa",
-            "web": "1:741135549855:web:0a7ad2430d21e0d8b7a9aa",
-            "windows": "1:741135549855:web:4e2ed3182edeaa8cb7a9aa"
+            "android": "1:828032333910:android:f92a64f52512c277c4e3f7",
+            "ios": "1:828032333910:ios:81be476fc05daf7fc4e3f7",
+            "macos": "1:828032333910:ios:81be476fc05daf7fc4e3f7",
+            "web": "1:828032333910:web:593a7e7738af88cac4e3f7",
+            "windows": "1:828032333910:web:68b63e4fd78387d3c4e3f7"
           }
         }
       }

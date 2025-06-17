@@ -60,7 +60,9 @@ class Patients {
     name = json['name'];
     password = json['password'];
     role = json['role'];
-    doctorId = json['doctorId'];
+    doctorId = json['doctorId'] is String
+        ? json['doctorId']
+        : json['doctorId']?['_id'];
     age = json['age'];
     code = json['code'];
     createdAt = json['createdAt'];
@@ -158,7 +160,7 @@ class Medicines {
     type = json['type'];
     startDate = json['startDate'];
     endDate = json['endDate'];
-    code = json['code']; // أو json['code'] لو كان الاسم كده عندك
+    code = json['prescribedTo'];
     confirm = json['confirm'];
     numPottle = json['numPottle'];
     timeToTake = json['timeToTake'];
