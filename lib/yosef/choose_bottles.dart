@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mindpal/app_style.dart';
+import 'package:mindpal/aya_file/edit_user_screen_aya.dart';
 import 'package:mindpal/main.dart';
 import 'package:mindpal/models/PatientResponseM.dart';
 import 'package:mindpal/services/api_manger.dart';
@@ -25,6 +26,14 @@ class _TestScreenState extends State<ChooseBottles> {
 
   bool isLoading = true;
   List<Medicines> medicines = [];
+  List<String> bottleNum = [
+    'Motor1',
+    'Motor2',
+    'Motor3',
+    'Motor4',
+    'Motor5',
+  ];
+
   String bottle1 = 'Motor1';
   String bottle2 = 'Motor2';
   String bottle3 = 'Motor3';
@@ -170,6 +179,14 @@ class _TestScreenState extends State<ChooseBottles> {
         patient = fetchedPatient;
         medicines = patient?.medicines ?? [];
         isLoading = false;
+
+        print("Loaded medicines: ${patient?.medicines?.length ?? 0}");
+        patient?.medicines?.forEach((med) {
+          print("Medicine name: ${med.name}, Bottle: ${med.numPottle}");
+        });
+        for (var m in medicines) {
+          print("${m.name} -> ${m.numPottle}");
+        }
       });
     } catch (e, stacktrace) {
       print("❌ Error fetching patients: $e");
@@ -208,8 +225,14 @@ class _TestScreenState extends State<ChooseBottles> {
         backgroundColor: Colors.black,
       ),
       backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: Column(
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFFA27EFC),
+              ),
+            )
+          : SingleChildScrollView(
+              child: Column(
           children: [
             Column(
               children: [
@@ -263,316 +286,114 @@ class _TestScreenState extends State<ChooseBottles> {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(left: width * 0.06),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'bills bottles',
-                        style:
-                            TextStyle(fontSize: 24, color: Color(0xFFD0D2D1)),
-                      ),
-                      Spacer(),
-                      Text(
-                        '5 bottles',
-                        style: TextStyle(fontSize: 8, color: Color(0xFFA27EFC)),
-                      ),
-                      SizedBox(
-                        width: width * 0.07,
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: height * 0.037,
-                  ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: () async {
-                            await Navigator.pushNamed(
-                              context,
-                              AddMedicineName.routeName,
-                              arguments: {
-                                'patientCode': patientCode,
-                                'numBottle': bottle1,
+                      padding: EdgeInsets.only(left: width * 0.06),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'bills bottles',
+                                style: TextStyle(
+                                    fontSize: 24, color: Color(0xFFD0D2D1)),
+                              ),
+                              Spacer(),
+                              Text(
+                                '${medicines.length} bottles',
+                                style: TextStyle(
+                                    fontSize: 8, color: Color(0xFFA27EFC)),
+                              ),
+                              SizedBox(width: width * 0.07),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.037),
+                          SizedBox(
+                            height: height * 0.4,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: bottleNum.length,
+                              itemBuilder: (context, index) {
+                                String bottle = bottleNum[index];
+                                return InkWell(
+                                  onTap: () async {
+                                    String? medName =
+                                        getMedicineNameByBottle(bottle);
+
+                                    if (medName == 'empty' || medName.isEmpty) {
+                                      // لو مفيش دواء في الزجاجة، روح لصفحة إضافة اسم الدواء
+                                      await Navigator.pushNamed(
+                                        context,
+                                        AddMedicineName.routeName,
+                                        arguments: {
+                                          'patientCode': patientCode,
+                                          'numBottle': bottle,
+                                        },
+                                      );
+                                    } else {
+                                      // لو فيه دواء، روح لصفحة تانية مثلاً TypeMedicine
+                                      await Navigator.pushNamed(
+                                        context,
+                                        EditUserScreen.routeName,
+                                        arguments: {
+                                          'patientCode': patientCode,
+                                          'numBottle': bottle,
+                                          'medicineName': medName,
+                                          'medicine': medicines[index],
+                                        },
+                                      );
+                                    }
+
+                                    // تحميل البيانات بعد الرجوع
+                                    if (patientId != null) {
+                                      await loadPatients();
+                                    }
+                                  },
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.only(right: width * 0.034),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF292929),
+                                      border: Border.all(
+                                          color: Color(0xFFA27EFC), width: 1),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    width: width * 0.31,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: height * 0.033),
+                                        Text(
+                                          bottle,
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              color: Color(0xFFD0D2D1)),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Center(
+                                            child: Image.asset(
+                                                'assets/images/U 1.png')),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          getMedicineNameByBottle(bottle),
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          '(0)pills',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0xFFD0D2D1)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
                               },
-                            );
-                            if (patientId != null) {
-                              await loadPatients(); // ⬅️ تحدث البيانات بعد الرجوع
-                            }
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: width * 0.034),
-                            decoration: BoxDecoration(
-                              color: Color(0xFF292929),
-                              border: Border.all(
-                                  color: Color(0xFFA27EFC), width: 1),
-                              borderRadius: BorderRadius.circular(15),
                             ),
-                            height: height * 0.4,
-                            width: width * 0.31,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: height * 0.033,
-                                ),
-                                Text(
-                                  bottle1,
-                                  style: TextStyle(
-                                      fontSize: 10, color: Color(0xFFD0D2D1)),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Center(
-                                    child:
-                                        Image.asset('assets/images/U 1.png')),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  getMedicineNameByBottle(bottle1),
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.white),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  '(0)pills',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Color(0xFFD0D2D1)),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(arguments: {
-                              'patientCode': patientCode,
-                              'numBottle': bottle2
-                            }, context, AddMedicineName.routeName);
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: width * 0.034),
-                            decoration: BoxDecoration(
-                              color: Color(0xFF292929),
-                              border: Border.all(
-                                  color: Color(0xFFA27EFC), width: 1),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            height: height * 0.4,
-                            width: width * 0.31,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: height * 0.033,
-                                ),
-                                Text(
-                                  bottle2,
-                                  style: TextStyle(
-                                      fontSize: 10, color: Color(0xFFD0D2D1)),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Center(
-                                    child:
-                                        Image.asset('assets/images/U 1.png')),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  getMedicineNameByBottle(bottle2),
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.white),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  '(0)pills',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Color(0xFFD0D2D1)),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(arguments: {
-                              'patientCode': patientCode,
-                              'numBottle': bottle3
-                            }, context, AddMedicineName.routeName);
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: width * 0.034),
-                            decoration: BoxDecoration(
-                              color: Color(0xFF292929),
-                              border: Border.all(
-                                  color: Color(0xFFA27EFC), width: 1),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            height: height * 0.4,
-                            width: width * 0.31,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: height * 0.033,
-                                ),
-                                Text(
-                                  bottle3,
-                                  style: TextStyle(
-                                      fontSize: 10, color: Color(0xFFD0D2D1)),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Center(
-                                    child:
-                                        Image.asset('assets/images/U 1.png')),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  getMedicineNameByBottle(bottle3),
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.white),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  '(0)pills',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Color(0xFFD0D2D1)),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(arguments: {
-                              'patientCode': patientCode,
-                              'numBottle': bottle4
-                            }, context, AddMedicineName.routeName);
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: width * 0.034),
-                            decoration: BoxDecoration(
-                              color: Color(0xFF292929),
-                              border: Border.all(
-                                  color: Color(0xFFA27EFC), width: 1),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            height: height * 0.4,
-                            width: width * 0.31,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: height * 0.033,
-                                ),
-                                Text(
-                                  bottle4,
-                                  style: TextStyle(
-                                      fontSize: 10, color: Color(0xFFD0D2D1)),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Center(
-                                    child:
-                                        Image.asset('assets/images/U 1.png')),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  getMedicineNameByBottle(bottle4),
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.white),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  '(0)pills',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Color(0xFFD0D2D1)),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              AddMedicineName.routeName,
-                              arguments: {
-                                'patientCode': patientCode,
-                                'numBottle': bottle5
-                              },
-                            );
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: width * 0.034),
-                            decoration: BoxDecoration(
-                              color: Color(0xFF292929),
-                              border: Border.all(
-                                  color: Color(0xFFA27EFC), width: 1),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            height: height * 0.4,
-                            width: width * 0.31,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: height * 0.033,
-                                ),
-                                Text(
-                                  bottle5,
-                                  style: TextStyle(
-                                      fontSize: 10, color: Color(0xFFD0D2D1)),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Center(
-                                    child:
-                                        Image.asset('assets/images/U 1.png')),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  getMedicineNameByBottle(bottle5),
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.white),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  '(0)pills',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Color(0xFFD0D2D1)),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
+                          )
+                        ],
+                      )),
             SizedBox(
               height: height * 0.03,
             ),

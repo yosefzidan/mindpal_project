@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
 import 'package:mindpal/models/SignInResponse.dart';
+import 'package:mindpal/services/api_constants.dart';
 import 'package:mindpal/services/api_manger.dart';
 import 'package:mindpal/yosef/home_admin_screen.dart';
 import 'package:mindpal/yosef/home_doctor_screen.dart';
@@ -59,6 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response.token != null) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', response.token!);
+        await prefs.setString('role', role!);
+        ApiConstants.Token = response.token!;
 
         switch (role) {
           case 'doctor':

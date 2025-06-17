@@ -41,48 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyC8IFtZ_MjwHxyDZiDtxdBRMeb1CQ1Ay2U',
-    appId: '1:741135549855:web:0a7ad2430d21e0d8b7a9aa',
-    messagingSenderId: '741135549855',
-    projectId: 'mindpal-50007',
-    authDomain: 'mindpal-50007.firebaseapp.com',
-    storageBucket: 'mindpal-50007.firebasestorage.app',
-    measurementId: 'G-XDPW77Y7MM',
+    apiKey: 'AIzaSyDlqtLll5ln9C0JV9tXZ9GpTLPxJfizNMo',
+    appId: '1:828032333910:web:593a7e7738af88cac4e3f7',
+    messagingSenderId: '828032333910',
+    projectId: 'mindpal-1742f',
+    authDomain: 'mindpal-1742f.firebaseapp.com',
+    storageBucket: 'mindpal-1742f.firebasestorage.app',
+    measurementId: 'G-NRBXZL3SL9',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCtiog2npXsG3V4Uh-mS2MxxHe_wEw1VPk',
-    appId: '1:741135549855:android:a51438d05fd44ea4b7a9aa',
-    messagingSenderId: '741135549855',
-    projectId: 'mindpal-50007',
-    storageBucket: 'mindpal-50007.firebasestorage.app',
+    apiKey: 'AIzaSyAOFQkZZIsJgtVdjUFN_Tal9Yt-ek0oqDE',
+    appId: '1:828032333910:android:f92a64f52512c277c4e3f7',
+    messagingSenderId: '828032333910',
+    projectId: 'mindpal-1742f',
+    storageBucket: 'mindpal-1742f.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB7uHMc9Dz0vPMqM3giBKY4GxCe6Hxz2lM',
-    appId: '1:741135549855:ios:3b42444c651da749b7a9aa',
-    messagingSenderId: '741135549855',
-    projectId: 'mindpal-50007',
-    storageBucket: 'mindpal-50007.firebasestorage.app',
+    apiKey: 'AIzaSyA7Ek9cWtfauw-KAsSjXvnla9jU9jQ5hMA',
+    appId: '1:828032333910:ios:81be476fc05daf7fc4e3f7',
+    messagingSenderId: '828032333910',
+    projectId: 'mindpal-1742f',
+    storageBucket: 'mindpal-1742f.firebasestorage.app',
     iosBundleId: 'com.example.mindpal',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyB7uHMc9Dz0vPMqM3giBKY4GxCe6Hxz2lM',
-    appId: '1:741135549855:ios:3b42444c651da749b7a9aa',
-    messagingSenderId: '741135549855',
-    projectId: 'mindpal-50007',
-    storageBucket: 'mindpal-50007.firebasestorage.app',
+    apiKey: 'AIzaSyA7Ek9cWtfauw-KAsSjXvnla9jU9jQ5hMA',
+    appId: '1:828032333910:ios:81be476fc05daf7fc4e3f7',
+    messagingSenderId: '828032333910',
+    projectId: 'mindpal-1742f',
+    storageBucket: 'mindpal-1742f.firebasestorage.app',
     iosBundleId: 'com.example.mindpal',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyC8IFtZ_MjwHxyDZiDtxdBRMeb1CQ1Ay2U',
-    appId: '1:741135549855:web:4e2ed3182edeaa8cb7a9aa',
-    messagingSenderId: '741135549855',
-    projectId: 'mindpal-50007',
-    authDomain: 'mindpal-50007.firebaseapp.com',
-    storageBucket: 'mindpal-50007.firebasestorage.app',
-    measurementId: 'G-FJSEFTEJBT',
+    apiKey: 'AIzaSyDlqtLll5ln9C0JV9tXZ9GpTLPxJfizNMo',
+    appId: '1:828032333910:web:68b63e4fd78387d3c4e3f7',
+    messagingSenderId: '828032333910',
+    projectId: 'mindpal-1742f',
+    authDomain: 'mindpal-1742f.firebaseapp.com',
+    storageBucket: 'mindpal-1742f.firebasestorage.app',
+    measurementId: 'G-25DMS9E7RG',
   );
 }

@@ -96,8 +96,9 @@ class SaveSuccessScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 GestureDetector(
-                  onTap: () =>
-                      Navigator.of(context).popUntil((route) => route.isFirst),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [

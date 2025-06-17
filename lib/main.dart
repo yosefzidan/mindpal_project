@@ -8,9 +8,11 @@ import 'package:mindpal/aya_file/medication_form_screen_aya.dart';
 import 'package:mindpal/aya_file/pill_report_screen_aya.dart';
 import 'package:mindpal/aya_file/radiology_report_screen_aya.dart';
 import 'package:mindpal/aya_file/screens_aya/pill_report_screen_aya.dart';
+import 'package:mindpal/notifications/notification_service.dart';
 import 'package:mindpal/services/api_constants.dart';
 import 'package:mindpal/yosef/add_medicine.dart';
 import 'package:mindpal/yosef/add_medicine_name.dart';
+import 'package:mindpal/yosef/choose_bottle_update.dart';
 import 'package:mindpal/yosef/choose_bottles.dart';
 import 'package:mindpal/yosef/create_doctor_account.dart';
 import 'package:mindpal/yosef/create_patientAccount.dart';
@@ -18,7 +20,6 @@ import 'package:mindpal/yosef/doctor_home_page.dart';
 import 'package:mindpal/yosef/doctor_tab.dart';
 import 'package:mindpal/yosef/done_medicine_screen.dart';
 import 'package:mindpal/yosef/done_screen.dart';
-import 'package:mindpal/yosef/firebase_options.dart';
 import 'package:mindpal/yosef/hafez.dart';
 import 'package:mindpal/yosef/home_admin_screen.dart';
 import 'package:mindpal/yosef/home_doctor_screen.dart';
@@ -33,15 +34,26 @@ import 'package:mindpal/yosef/success_page.dart';
 import 'package:mindpal/yosef/type_medicine.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'firebase_options.dart';
+
 late FirebaseApp secondaryApp;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
 
+  // تحميل التوكن المحفوظ
   await loadTokenFromSharedPrefs();
+
+  // ✅ تسجيل الهاندلر الخاص بالإشعارات في الخلفية (لازم قبل Firebase.initializeApp)
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // ✅ تهيئة Firebase الأساسي
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // ✅ تهيئة تطبيق Firebase الثانوي (للتسجيل مثلاً)
   secondaryApp = await Firebase.initializeApp(
     name: 'secondaryApp',
     options: FirebaseOptions(
@@ -54,40 +66,56 @@ void main() async {
     ),
   );
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // ✅ إعداد Flutter Local Notifications + إنشاء القناة + listener داخلي
+  await setupFlutterNotifications();
 
+  // ✅ طلب صلاحيات الإشعارات
   NotificationSettings settings =
       await FirebaseMessaging.instance.requestPermission(
     alert: true,
     badge: true,
     sound: true,
   );
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print("📲 App opened from notification");
+    // Optional: navigate to details page based on message.data
+  });
 
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    print('✅ User granted permission for notifications');
-  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-    print('⚠️ User granted provisional permission');
+    print('✅ Notifications authorized');
   } else {
-    print('❌ User declined or has not accepted permission');
+    print('❌ Notifications not authorized');
   }
 
-  // ✅ اطبع التوكن
+  // ✅ عرض توكن الجهاز
   FirebaseMessaging.instance.getToken().then((token) {
     print("📱 Device Token: $token");
   });
 
-  // ✅ اسمع للإشعارات داخل التطبيق
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print("🔔 Foreground Notification");
-    print("Title: ${message.notification?.title}");
-    print("Body: ${message.notification?.body}");
-  });
+  String? token = prefs.getString('token');
+  String? role = prefs.getString('role');
 
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    print("📲 App opened from notification");
-  });
+  Widget home;
 
-  runApp(MyApp());
+  if (token != null && role != null) {
+    switch (role) {
+      case 'doctor':
+        home = HomeDoctorScreen();
+        break;
+      case 'patient':
+        home = HomePatient();
+        break;
+      case 'admin':
+        home = HomeAdminScreen();
+        break;
+      default:
+        home = LoginScreen();
+    }
+  } else {
+    home = LoginScreen();
+  }
+
+  runApp(MyApp(home: home));
 }
 
 Future<void> loadTokenFromSharedPrefs() async {
@@ -103,7 +131,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Widget home;
+
+  const MyApp({super.key, required this.home});
 
   @override
   Widget build(BuildContext context) {
@@ -185,6 +215,7 @@ class MyApp extends StatelessWidget {
         TypeMedicine.routeName: (context) => TypeMedicine(),
         HomePatient.routeName: (context) => HomePatient(),
         HomeDoctorScreen.routeName: (context) => HomeDoctorScreen(),
+        ChooseBottleUpdate.routeName: (context) => ChooseBottleUpdate(),
         //   aya
         DoctorHomeScreen.routeName: (context) => DoctorHomeScreen(),
         PillReportScreen2.routeName: (context) => PillReportScreen2(),
@@ -194,7 +225,7 @@ class MyApp extends StatelessWidget {
         RadiologyReportScreen.routeName: (context) => RadiologyReportScreen(),
         EditUserScreen.routeName: (context) => EditUserScreen()
       },
-      initialRoute: LoginScreen.routeName,
+      home: home,
     );
   }
 }

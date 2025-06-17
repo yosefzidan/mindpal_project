@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/aya_file/save_success_screen_aya.dart';
 import 'package:mindpal/models/PatientResponseM.dart';
+import 'package:mindpal/services/api_manger.dart';
 
 class EditUserScreen extends StatefulWidget {
   static const String routeName = "EditUserScreen";
@@ -16,59 +17,56 @@ class _EditUserScreenState extends State<EditUserScreen> {
   late TextEditingController _pillsPerDayController;
   TimeOfDay _pillTime = TimeOfDay(hour: 10, minute: 30);
   String _hoursApart = 'Every 2 hours';
-  String _takingInterval = 'Every 3 days';
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now().add(const Duration(days: 30));
+  bool _isInit = false;
 
-  final List<String> genders = ['Male', 'Female'];
-  final List<String> alzStages = [
-    'The First Stage',
-    'The Second Stage',
-    'The Third Stage',
-    'The Fourth Stage',
-  ];
   final List<String> hoursApartOptions = [
-    'Every 1 hour',
-    'Every 2 hours',
-    'Every 3 hours',
-    'Every 4 hours',
+    'Every 4 hour',
+    'Every 6 hours',
+    'Every 8 hours',
+    'Every 18 hours',
+    'Every 24 hours',
+    'Every 48 hours',
+    'Every 72 hours',
+    'Every 96 hours',
   ];
-  final List<String> takingIntervals = [
-    'Every day',
-    'Every 2 days',
-    'Every 3 days',
-    'Every 5 days',
-  ];
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-
-    if (args != null) {
-      medicine = args['medicine'];
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: medicine?.name ?? '');
-    _amountController = TextEditingController(text: medicine?.dosage ?? '');
-    _pillsPerDayController =
-        TextEditingController(text: medicine?.schedule ?? '');
-    _hoursApart = medicine?.schedule ?? 'Every 2 hours';
-    _takingInterval = medicine?.dosage ?? 'Every 3 days';
-    String timeString = medicine?.timeToTake ?? '10:30';
-    List<String> parts = timeString.split(':');
-    int hour = int.parse(parts[0]);
-    int minute = int.parse(parts[1]);
-    _pillTime = TimeOfDay(hour: hour, minute: minute);
-    _startDate = DateTime.tryParse(medicine?.startDate ?? '') ?? DateTime.now();
+    _nameController = TextEditingController();
+    _amountController = TextEditingController();
+    _pillsPerDayController = TextEditingController();
+  }
 
-    _endDate = DateTime.tryParse(medicine?.endDate ?? '') ??
-        DateTime.now().add(const Duration(days: 30));
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInit) {
+      final args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      if (args != null) {
+        medicine = args['medicine'];
+
+        _nameController.text = medicine?.name ?? '';
+        _amountController.text = medicine?.dosage ?? '';
+        _pillsPerDayController.text = '2';
+        _hoursApart = medicine?.schedule ?? '';
+
+        String timeString = medicine?.timeToTake ?? '10:30';
+        List<String> parts = timeString.split(':');
+        int hour = int.parse(parts[0]);
+        int minute = int.parse(parts[1]);
+        _pillTime = TimeOfDay(hour: hour, minute: minute);
+
+        _startDate =
+            DateTime.tryParse(medicine?.startDate ?? '') ?? DateTime.now();
+        _endDate = DateTime.tryParse(medicine?.endDate ?? '') ??
+            DateTime.now().add(const Duration(days: 30));
+      }
+      _isInit = true;
+    }
   }
 
   @override
@@ -135,6 +133,45 @@ class _EditUserScreenState extends State<EditUserScreen> {
     }
   }
 
+  Future<void> updateMedicineFromForm() async {
+    if (medicine?.id == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('❌ No medicine ID found')),
+      );
+      return;
+    }
+
+    final updatedMedicine = Medicines(
+      id: medicine!.id,
+      name: _nameController.text,
+      dosage: _amountController.text,
+      schedule: _pillsPerDayController.text,
+      timeToTake:
+          '${_pillTime.hour.toString().padLeft(2, '0')}:${_pillTime.minute.toString().padLeft(2, '0')}',
+      startDate: _startDate.toIso8601String(),
+      endDate: _endDate.toIso8601String(),
+      code: medicine!.code,
+      confirm: medicine!.confirm ?? false,
+      numPottle: medicine!.numPottle,
+      type: medicine!.type,
+    );
+
+    try {
+      await ApiManger.updateMedicine(medicine!.id!, updatedMedicine);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => SaveSuccessScreen(
+            patientName: _nameController.text,
+          ),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('❌ Failed to update: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final purple = const Color(0xFFA27AFC);
@@ -174,15 +211,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                IconButton(
-                  icon: const Icon(Icons.edit,
-                      color: Color(0xFFA27AFC), size: 22),
-                  tooltip: 'Edit patient details',
-                  onPressed: () {
-                    // Optionally scroll to the first field
-                    // You can add a ScrollController for smooth scroll if desired
-                  },
-                ),
+                const Icon(Icons.edit, color: Color(0xFFA27AFC), size: 22),
               ],
             ),
             const SizedBox(height: 4),
@@ -213,12 +242,6 @@ class _EditUserScreenState extends State<EditUserScreen> {
                 hoursApartOptions,
                 (val) => setState(() => _hoursApart = val)),
             const SizedBox(height: 16),
-            _buildDropdown(
-                'Pill taking interval',
-                _takingInterval,
-                takingIntervals,
-                (val) => setState(() => _takingInterval = val)),
-            const SizedBox(height: 16),
             _buildDatePicker(
                 'Start of course', _startDate, () => _pickDate(context, true)),
             const SizedBox(height: 16),
@@ -228,25 +251,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  final updatedUser = {
-                    'name': _nameController.text,
-                    'amount': _amountController.text,
-                    'pillsPerDay': _pillsPerDayController.text,
-                    'pillTime': _pillTime,
-                    'hoursApart': _hoursApart,
-                    'takingInterval': _takingInterval,
-                    'startDate': _startDate,
-                    'endDate': _endDate,
-                  };
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => SaveSuccessScreen(
-                        patientName: _nameController.text,
-                      ),
-                    ),
-                  );
-                },
+                onPressed: updateMedicineFromForm,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: purple,
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -294,7 +299,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
             fillColor: const Color(0xFF23232B),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Color(0xFFA892F5)),
+              borderSide: const BorderSide(color: Color(0xFFA892F5)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -304,10 +309,8 @@ class _EditUserScreenState extends State<EditUserScreen> {
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Color(0xFFA892F5), width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           ),
         ),
       ],
