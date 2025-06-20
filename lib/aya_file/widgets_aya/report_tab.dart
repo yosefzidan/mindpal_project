@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
-import 'package:mindpal/aya_file/bottles_screen_aya.dart';
 import 'package:mindpal/aya_file/pill_report_screen_aya.dart';
 import 'package:mindpal/models/PatientResponseM.dart';
 import 'package:mindpal/services/api_manger.dart';
@@ -49,6 +48,7 @@ class _ReportTabState extends State<ReportTab> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
 
     final purple = const Color(0xFFA892F5);
     final dark = const Color(0xFF191919);
@@ -76,6 +76,8 @@ class _ReportTabState extends State<ReportTab> {
                     });
                   },
                   headerStyle: HeaderStyle(
+                    leftChevronMargin: EdgeInsets.only(left: width * 0.16),
+                    rightChevronMargin: EdgeInsets.only(right: width * 0.1),
                     formatButtonVisible: false,
                     titleCentered: true,
                     titleTextStyle:

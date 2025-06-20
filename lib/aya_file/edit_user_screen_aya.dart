@@ -25,6 +25,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
     'Every 4 hour',
     'Every 6 hours',
     'Every 8 hours',
+    'Every 12 hours',
     'Every 18 hours',
     'Every 24 hours',
     'Every 48 hours',

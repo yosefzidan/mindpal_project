@@ -20,6 +20,32 @@ class _CreatePatientAccountState extends State<CreatePatientAccount> {
 
   bool _isObscure = true;
   bool _isObscure2 = true;
+  List<Doctor> doctors = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadDoctors();
+  }
+
+  Future<void> loadDoctors() async {
+    try {
+      final fetchedDoctors = await ApiManger.getAllDoctor();
+      setState(() {
+        doctors = fetchedDoctors;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching doctors: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to load doctors")),
+      );
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   void handleAddAccount() async {
     String name = nameController.text.trim();
@@ -225,26 +251,51 @@ class _CreatePatientAccountState extends State<CreatePatientAccount> {
             ),
             TextFormField(
               controller: doctorNameController,
+              readOnly: true,
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(21)),
+                  ),
+                  backgroundColor: Color(0xFF8E6CDC),
+                  builder: (context) {
+                    return ListView.separated(
+                      padding: EdgeInsets.all(16),
+                      itemCount: doctors.length,
+                      separatorBuilder: (_, __) => Divider(color: Colors.grey),
+                      itemBuilder: (context, index) {
+                        final doctor = doctors[index];
+                        return ListTile(
+                          title: Text(
+                            doctor.name ?? '',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onTap: () {
+                            doctorNameController.text = doctor.name ?? '';
+                            Navigator.pop(context); // نغلق الـ BottomSheet
+                          },
+                        );
+                      },
+                    );
+                  },
+                );
+              },
               style: TextStyle(fontSize: 17, color: Color(0xFFA6A6A6)),
               decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Color(0xFFEEEEEE), width: 1),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Color(0xFFA27AFC), width: 2),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Color(0xFFA27AFC), width: 1),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Color(0xFFA27AFC), width: 1),
-                  ),
-                  hintText: 'Enter your Name',
-                  hintStyle: TextStyle(color: Color(0xFF666666), fontSize: 17)),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Color(0xFFEEEEEE), width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Color(0xFFA27AFC), width: 2),
+                ),
+                hintText: 'Select Doctor Name',
+                hintStyle: TextStyle(color: Color(0xFF666666), fontSize: 17),
+                suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey),
+              ),
             ),
             SizedBox(height: height * 0.06),
             Center(

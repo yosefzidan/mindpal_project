@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
 
     final purple = const Color(0xFFA892F5);
     final dark = const Color(0xFF191919);
@@ -75,6 +76,8 @@ class _HomePageState extends State<HomePage> {
                     });
                   },
                   headerStyle: HeaderStyle(
+                    leftChevronMargin: EdgeInsets.only(left: width * 0.16),
+                    rightChevronMargin: EdgeInsets.only(right: width * 0.1),
                     formatButtonVisible: false,
                     titleCentered: true,
                     titleTextStyle:

@@ -266,7 +266,6 @@ class _PillReportScreen2State extends State<PillReportScreen2> {
     );
   }
 }
-
 class _MedicationItem extends StatelessWidget {
   final String name;
   final String time;

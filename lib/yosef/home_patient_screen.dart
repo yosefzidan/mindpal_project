@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/services/api_constants.dart';
-import 'package:mindpal/yosef/doctor_tab.dart';
-import 'package:mindpal/yosef/home_tab.dart';
+import 'package:mindpal/yosef/home_patient.dart';
 import 'package:mindpal/yosef/login_screen.dart';
-import 'package:mindpal/yosef/patient_tab.dart';
+import 'package:mindpal/yosef/show_bottles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeAdminScreen extends StatefulWidget {
-  static const String routeName = "HomeAdminScreen";
+class HomePatientScreen extends StatefulWidget {
+  static const String routeName = "HomePatientScreen";
 
   @override
-  State<HomeAdminScreen> createState() => _HomeAdminScreenState();
+  State<HomePatientScreen> createState() => _HomePatientScreenState();
 }
 
-class _HomeAdminScreenState extends State<HomeAdminScreen> {
-  int selectedIndex = 1;
-  final List<Widget> pages = [DoctorTab(), HomeTab(), PatientTab()];
-  final GlobalKey<ScaffoldState> _scaffoldKey =
-      GlobalKey<ScaffoldState>(); // لتتحكم في فتح الـ Drawer
+class _HomePatientScreenState extends State<HomePatientScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void _onItemTapped(int index) {
+  int selectedIndex = 1;
+
+  final List<Widget> pages = [
+    ShowBottles(),
+    HomePatient(),
+    Placeholder(),
+  ];
+
+  void onItemTapped(int index) {
     setState(() {
       selectedIndex = index;
     });
@@ -27,19 +31,22 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+    const purple = Color(0xFFA27AFC);
+    const dark = Colors.black;
 
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.black,
+      backgroundColor: dark,
       drawer: Container(
-        width: width * 0.6, // تخلي الدروار تلتين أو أقل
+        width: width * 0.6,
         color: Colors.grey[900],
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(color: Color(0xFF825DDA)),
+              decoration: BoxDecoration(color: purple),
               child: Text(
                 'Menu',
                 style: TextStyle(color: Colors.white, fontSize: 24),
@@ -53,10 +60,11 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
                 await prefs.remove('token');
                 await prefs.remove('role');
                 await prefs.remove('userId');
+
                 ApiConstants.Token = '';
 
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                  LoginScreen.routeName, //  LoginScreen.routeName
+                  LoginScreen.routeName,
                   (route) => false,
                 );
               },
@@ -67,8 +75,6 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
       body: Stack(
         children: [
           pages[selectedIndex],
-
-          // زر القائمة الجانبية في الزاوية
           Positioned(
             top: 40,
             left: 16,
@@ -79,7 +85,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
               child: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Color(0xFF292929),
+                  color: Colors.white24,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(Icons.menu, color: Colors.white),
@@ -89,7 +95,8 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
         ],
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.black,
+        height: height * 0.14,
+        color: dark,
         shape: const CircularNotchedRectangle(),
         notchMargin: 15,
         child: SizedBox(
@@ -98,57 +105,53 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               buildNavItem(
-                  image: AssetImage('assets/images/icon-doctor-regular.png'),
-                  label: 'Doctors',
-                  index: 0),
-              SizedBox(width: width * 0.25),
+                  icon: Icons.medication_outlined, label: 'Pills', index: 0),
+              buildNavItem(icon: Icons.home_rounded, label: 'Home', index: 1),
               buildNavItem(
-                  image: AssetImage('assets/images/icon-patient-regular.png'),
-                  label: 'Patients',
+                  icon: Icons.insert_chart_outlined,
+                  label: 'Reports',
                   index: 2),
             ],
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: GestureDetector(
-        onTap: () => _onItemTapped(1),
-        child: Container(
-          height: 70,
-          width: 70,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: selectedIndex == 1 ? Color(0xFF825DDA) : Color(0xFF825DDA),
-          ),
-          child: ImageIcon(
-            AssetImage('assets/images/shop.png'),
-            color: Colors.white,
-            size: 35,
           ),
         ),
       ),
     );
   }
 
-  Widget buildNavItem(
-      {required AssetImage image, required String label, required int index}) {
+  Widget buildNavItem({
+    required IconData icon,
+    required String label,
+    required int index,
+  }) {
+    const purple = Color(0xFFA892F5);
+    final isSelected = selectedIndex == index;
+    final isHome = index == 1;
+
     return GestureDetector(
-      onTap: () => _onItemTapped(index),
+      onTap: () => onItemTapped(index),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ImageIcon(
-            image,
-            size: 24,
-            color: selectedIndex == index ? Color(0xFF825DDA) : Colors.white,
-          ),
+          const SizedBox(height: 6),
+          isHome
+              ? Container(
+                  width: 50,
+                  height: 50,
+                  decoration: const BoxDecoration(
+                    color: purple,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, color: Colors.white, size: 26),
+                )
+              : Icon(icon, color: isSelected ? purple : Colors.white54),
           const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
-              color: selectedIndex == index ? Color(0xFF825DDA) : Colors.white,
+              color: isSelected ? purple : Colors.white54,
               fontSize: 12,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
