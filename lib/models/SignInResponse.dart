@@ -6,20 +6,20 @@ class SignInRequest {
     this.name,
     this.password,
     this.role,
-    this.deviceToken,
+    this.deviceTokens,
   });
 
   String? name;
   String? password;
   String? role;
-  String? deviceToken;
+  String? deviceTokens;
 
   Map<String, dynamic> toJson() {
     return {
       "name": name,
       "password": password,
       "role": role,
-      "deviceToken": deviceToken,
+      "deviceToken": deviceTokens,
     };
   }
 }

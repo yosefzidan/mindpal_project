@@ -98,12 +98,6 @@ class _TestScreenState extends State<ChooseBottles> {
 
       final mainDbRef = FirebaseDatabase.instance.ref();
       await mainDbRef.child('AlzFix').set(firebaseData);
-      //
-      // final secondaryDbRef = FirebaseDatabase.instanceFor(
-      //   app: secondaryApp,
-      //   databaseURL: "https://OTHER_PROJECT.firebaseio.com",
-      // ).ref();
-      // // await secondaryDbRef.child('AlzFix').set(firebaseData);
 
       print("✅ All medicines sent to both Firebase successfully");
     } catch (e) {

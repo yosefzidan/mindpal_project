@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mindpal/app_style.dart';
 import 'package:mindpal/models/SignInResponse.dart';
 import 'package:mindpal/services/api_constants.dart';
@@ -7,6 +8,7 @@ import 'package:mindpal/services/api_manger.dart';
 import 'package:mindpal/yosef/home_admin_screen.dart';
 import 'package:mindpal/yosef/home_doctor_screen.dart';
 import 'package:mindpal/yosef/home_patient.dart';
+import 'package:mindpal/yosef/home_patient_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -52,15 +54,21 @@ class _LoginScreenState extends State<LoginScreen> {
         name: nameController.text.trim(),
         password: passwordController.text.trim(),
         role: role!.toLowerCase(),
-        deviceToken: deviceToken ?? '',
+        deviceTokens: deviceToken ?? '',
       );
 
       SignInResponse response = await ApiManger.postSignIn(signInRequest);
 
       if (response.token != null) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        Map<String, dynamic> decodedToken = JwtDecoder.decode(response.token!);
+        String? userId = decodedToken['userId'];
+
         await prefs.setString('token', response.token!);
         await prefs.setString('role', role!);
+        await prefs.setString('userId', userId ?? '');
+
         ApiConstants.Token = response.token!;
 
         switch (role) {
@@ -68,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Navigator.pushNamed(context, HomeDoctorScreen.routeName);
             break;
           case 'patient':
-            Navigator.pushNamed(context, HomePatient.routeName);
+            Navigator.pushNamed(context, HomePatientScreen.routeName);
             break;
           case 'admin':
             Navigator.pushNamed(context, HomeAdminScreen.routeName);

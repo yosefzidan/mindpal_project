@@ -24,14 +24,17 @@ import 'package:mindpal/yosef/hafez.dart';
 import 'package:mindpal/yosef/home_admin_screen.dart';
 import 'package:mindpal/yosef/home_doctor_screen.dart';
 import 'package:mindpal/yosef/home_patient.dart';
+import 'package:mindpal/yosef/home_patient_screen.dart';
 import 'package:mindpal/yosef/home_tab.dart';
 import 'package:mindpal/yosef/login_screen.dart';
 import 'package:mindpal/yosef/patient_information.dart';
 import 'package:mindpal/yosef/patient_tab.dart';
 import 'package:mindpal/yosef/select_role.dart';
+import 'package:mindpal/yosef/show_bottles.dart';
 import 'package:mindpal/yosef/success_add_patient.dart';
 import 'package:mindpal/yosef/success_page.dart';
 import 'package:mindpal/yosef/type_medicine.dart';
+import 'package:mindpal/yosef/view_medicine_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
@@ -123,11 +126,20 @@ Future<void> loadTokenFromSharedPrefs() async {
   ApiConstants.Token = prefs.getString('token');
 }
 
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
+
+  final prefs = await SharedPreferences.getInstance();
+  final role = prefs.getString('role') ?? 'patient';
+
+  if (role == 'patient' && message.data.isNotEmpty) {
+    // ✅ استدعاء showInteractiveNotification بنفسك
+    showInteractiveNotification(message);
+  }
+
   print("🔙 Notification received in background:");
-  print("Title: ${message.notification?.title}");
-  print("Body: ${message.notification?.body}");
+  print("✅ Full Data: ${message.data}");
 }
 
 class MyApp extends StatelessWidget {
@@ -216,6 +228,9 @@ class MyApp extends StatelessWidget {
         HomePatient.routeName: (context) => HomePatient(),
         HomeDoctorScreen.routeName: (context) => HomeDoctorScreen(),
         ChooseBottleUpdate.routeName: (context) => ChooseBottleUpdate(),
+        HomePatientScreen.routeName: (context) => HomePatientScreen(),
+        ShowBottles.routeName: (context) => ShowBottles(),
+        ViewMedicineScreen.routeName: (context) => ViewMedicineScreen(),
         //   aya
         DoctorHomeScreen.routeName: (context) => DoctorHomeScreen(),
         PillReportScreen2.routeName: (context) => PillReportScreen2(),
