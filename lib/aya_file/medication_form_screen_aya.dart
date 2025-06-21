@@ -30,6 +30,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
 
   String? type;
   String? numPills;
+  String? numAmount;
   bool isLoading = false;
   final dbRef = FirebaseDatabase.instance.ref();
 
@@ -179,7 +180,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
     try {
       final newMedicine = Medicines(
         name: medicineName,
-        dosage: '500',
+        dosage: numAmount,
         schedule: selectedHourGap,
         type: type,
         startDate: startDate.toString(),
@@ -238,6 +239,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
       medicineName = args['medicineName'];
       type = args['type'];
       numPills = args['numPills'];
+      numAmount = args['numAmount'];
     }
   }
 

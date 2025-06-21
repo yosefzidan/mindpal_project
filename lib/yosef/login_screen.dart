@@ -7,7 +7,6 @@ import 'package:mindpal/services/api_constants.dart';
 import 'package:mindpal/services/api_manger.dart';
 import 'package:mindpal/yosef/home_admin_screen.dart';
 import 'package:mindpal/yosef/home_doctor_screen.dart';
-import 'package:mindpal/yosef/home_patient.dart';
 import 'package:mindpal/yosef/home_patient_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -110,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushNamed(context, HomeDoctorScreen.routeName);
         break;
       case 'patient':
-        Navigator.pushNamed(context, HomePatient.routeName);
+        Navigator.pushNamed(context, HomePatientScreen.routeName);
         break;
       case 'admin':
         Navigator.pushNamed(context, HomeAdminScreen.routeName);

@@ -106,7 +106,7 @@ void main() async {
         home = HomeDoctorScreen();
         break;
       case 'patient':
-        home = HomePatient();
+        home = HomePatientScreen();
         break;
       case 'admin':
         home = HomeAdminScreen();

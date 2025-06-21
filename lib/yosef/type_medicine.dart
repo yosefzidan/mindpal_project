@@ -237,6 +237,7 @@ class _TypeMedicineState extends State<TypeMedicine> {
                           "medicineName": medicineName,
                           "type": type,
                           "numPills": numPillsController.text,
+                          "numAmount": numAmountController.text
                         },
                       );
                     },
