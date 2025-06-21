@@ -43,6 +43,18 @@ class _ChooseBottleUpdateState extends State<ChooseBottleUpdate> {
     }
   }
 
+  String getMedicineAmountByBottle(String bottleNumber) {
+    try {
+      final med = medicines.firstWhere(
+        (med) => med.numPottle == bottleNumber,
+      );
+
+      return med.dosage ?? '000';
+    } catch (e) {
+      return 'null';
+    }
+  }
+
   Medicines getMedicineNameByBottleM(String bottleNumber) {
     final med = medicines.firstWhere(
       (med) => med.numPottle == bottleNumber,
@@ -272,7 +284,7 @@ class _ChooseBottleUpdateState extends State<ChooseBottleUpdate> {
                                             ),
                                             SizedBox(height: 8),
                                             Text(
-                                              '(0)pills',
+                                              '(${getMedicineAmountByBottle(bottle)})pills',
                                               style: TextStyle(
                                                   fontSize: 12,
                                                   color: Color(0xFFD0D2D1)),

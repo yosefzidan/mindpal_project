@@ -44,6 +44,18 @@ class _ShowBottlesState extends State<ShowBottles> {
     }
   }
 
+  String getMedicineAmountByBottle(String bottleNumber) {
+    try {
+      final med = medicines.firstWhere(
+        (med) => med.numPottle == bottleNumber,
+      );
+
+      return med.dosage ?? '000';
+    } catch (e) {
+      return 'null';
+    }
+  }
+
   Medicines getMedicineNameByBottleM(String bottleNumber) {
     final med = medicines.firstWhere(
       (med) => med.numPottle == bottleNumber,
@@ -191,7 +203,7 @@ class _ShowBottlesState extends State<ShowBottles> {
                             ),
                           ),
                           SizedBox(
-                            height: height * 0.074,
+                            height: height * 0.06,
                           ),
                         ],
                       ),
@@ -218,7 +230,7 @@ class _ShowBottlesState extends State<ShowBottles> {
                               ),
                               SizedBox(height: height * 0.037),
                               SizedBox(
-                                height: height * 0.4,
+                                height: height * 0.42,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: medicines.length,
@@ -247,18 +259,18 @@ class _ShowBottlesState extends State<ShowBottles> {
                                           color: Color(0xFF292929),
                                           border: Border.all(
                                               color: Color(0xFFA27EFC),
-                                              width: 1),
+                                              width: 2),
                                           borderRadius:
                                               BorderRadius.circular(15),
                                         ),
-                                        width: width * 0.31,
+                                        width: width * 0.4,
                                         child: Column(
                                           children: [
-                                            SizedBox(height: height * 0.033),
+                                            SizedBox(height: height * 0.02),
                                             Text(
                                               bottle,
                                               style: TextStyle(
-                                                  fontSize: 10,
+                                                  fontSize: 18,
                                                   color: Color(0xFFD0D2D1)),
                                             ),
                                             SizedBox(height: 8),
@@ -269,14 +281,14 @@ class _ShowBottlesState extends State<ShowBottles> {
                                             Text(
                                               getMedicineNameByBottle(bottle),
                                               style: TextStyle(
-                                                  fontSize: 12,
+                                                  fontSize: 18,
                                                   color: Colors.white),
                                             ),
                                             SizedBox(height: 8),
                                             Text(
-                                              '(0)pills',
+                                              '(${getMedicineAmountByBottle(bottle)})pills',
                                               style: TextStyle(
-                                                  fontSize: 12,
+                                                  fontSize: 18,
                                                   color: Color(0xFFD0D2D1)),
                                             ),
                                           ],

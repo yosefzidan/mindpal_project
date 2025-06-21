@@ -34,7 +34,7 @@ class _HomePatientScreenState extends State<HomePatientScreen> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     const purple = Color(0xFFA27AFC);
-    const dark = Colors.black;
+    const dark = Color(0xff191919);
 
     return Scaffold(
       key: _scaffoldKey,

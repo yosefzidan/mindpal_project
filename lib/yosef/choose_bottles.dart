@@ -59,6 +59,18 @@ class _TestScreenState extends State<ChooseBottles> {
     }
   }
 
+  String getMedicineAmountByBottle(String bottleNumber) {
+    try {
+      final med = medicines.firstWhere(
+        (med) => med.numPottle == bottleNumber,
+      );
+
+      return med.dosage ?? '000';
+    } catch (e) {
+      return 'null';
+    }
+  }
+
   Future<void> sendPatientMedicinesToBothFirebase1(String patientId) async {
     try {
       Patients patient = await ApiManger.getPatientById1(patientId);
@@ -374,7 +386,7 @@ class _TestScreenState extends State<ChooseBottles> {
                                         ),
                                         SizedBox(height: 8),
                                         Text(
-                                          '(0)pills',
+                                          '(${getMedicineAmountByBottle(bottle)})pills',
                                           style: TextStyle(
                                               fontSize: 12,
                                               color: Color(0xFFD0D2D1)),

@@ -146,7 +146,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
       id: medicine!.id,
       name: _nameController.text,
       dosage: _amountController.text,
-      schedule: _pillsPerDayController.text,
+      schedule: _hoursApart,
       timeToTake:
           '${_pillTime.hour.toString().padLeft(2, '0')}:${_pillTime.minute.toString().padLeft(2, '0')}',
       startDate: _startDate.toIso8601String(),
