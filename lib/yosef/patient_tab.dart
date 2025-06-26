@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindpal/app_style.dart';
+import 'package:mindpal/models/DoctorResponse.dart';
 import 'package:mindpal/models/PatientResponseM.dart';
 import 'package:mindpal/services/api_manger.dart';
 import 'package:mindpal/yosef/choose_bottles.dart';
@@ -15,11 +16,31 @@ class PatientTab extends StatefulWidget {
 class PatientTabState extends State<PatientTab> {
   List<Patients> patients = [];
   bool isLoading = true;
+  List<Doctor> doctors = [];
 
   @override
   void initState() {
     super.initState();
     loadPatients();
+    loadDoctors();
+  }
+
+  Future<void> loadDoctors() async {
+    try {
+      final fetchedDoctors = await ApiManger.getAllDoctor();
+      setState(() {
+        doctors = fetchedDoctors;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching doctors: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to load doctors")),
+      );
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> loadPatients() async {
@@ -45,6 +66,14 @@ class PatientTabState extends State<PatientTab> {
         .then((_) => loadPatients()); // Reload after returning from create page
   }
 
+  String getDoctorNameById(String? doctorId) {
+    if (doctorId == null) return "Unknown";
+    final doctor = doctors.firstWhere(
+      (doc) => doc.id == doctorId,
+      orElse: () => Doctor(name: "Unknown"),
+    );
+    return doctor.name ?? "Unknown";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,9 +135,14 @@ class PatientTabState extends State<PatientTab> {
                                         color: Color(0xFFA27AFC), width: 1),
                                   ),
                                   child: ListTile(
+                                    trailing: Text(
+                                      'DR/\n${getDoctorNameById(patient.doctorId)}',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 9),
+                                    ),
                                     title: Text(
                                       patient.name ?? "Unknown",
-                                      style: AppStyle.gray16400,
+                                      style: AppStyle.gray18400,
                                     ),
                                   ),
                                 ),

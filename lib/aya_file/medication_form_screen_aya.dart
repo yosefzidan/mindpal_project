@@ -187,6 +187,8 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
         endDate: endDate.toString(),
         code: patientCode,
         numPottle: numBottle,
+        pillsPerDay: numPills,
+
         timeToTake: formatTimeOfDayTo24(selectedTime!), // صيغة 24 ساعة
       );
 

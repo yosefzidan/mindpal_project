@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mindpal/aya_file/radiology_report_screen_aya.dart';
 import 'package:mindpal/aya_file/screens_aya/pill_report_screen_aya.dart';
 import 'package:mindpal/models/PatientResponseM.dart';
@@ -43,6 +44,7 @@ class _PillReportScreenState extends State<PillReportScreen>
   Widget build(BuildContext context) {
     String patient = patients?.name ?? "null";
     Patients ppatient = patients!;
+    List<Medicines> medicines = ppatient.medicines!;
     return Scaffold(
       backgroundColor: const Color(0xFF18181B),
       appBar: AppBar(
@@ -71,8 +73,12 @@ class _PillReportScreenState extends State<PillReportScreen>
           _DailyStats(
             ppatients: ppatient,
           ),
-          _WeeklyStats(patientName: patient),
-          _MonthlyStats(patientName: patient),
+          _WeeklyStats(
+            ppatients: ppatient,
+          ),
+          _MonthlyStats(
+            ppatients: ppatient,
+          ),
         ],
       ),
     );
@@ -86,25 +92,44 @@ class _DailyStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Medicines> medicines = ppatients.medicines ?? [];
+
     return Column(
       children: [
         const SizedBox(height: 16),
-        const Text('10 SEP', style: TextStyle(color: Colors.white70)),
-        ...[
-          InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, PillReportScreen2.routeName,
-                    arguments: {'patient': ppatients});
-              },
-              child: _PillStatRow('Oxytocin', '10:00 AM', 'Taken')),
-          InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, PillReportScreen2.routeName,
-                    arguments: {'patient': ppatients});
-              },
-              child: _PillStatRow('Naloxone', '04:00 PM', 'Skipped')),
-        ],
-        const Spacer(),
+        Text(
+          DateFormat('d MMM').format(DateTime.now()), // مثال: 22 Jun
+          style: const TextStyle(color: Colors.white70),
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: ListView.builder(
+            itemCount: medicines.length,
+            itemBuilder: (context, index) {
+              final medicine = medicines[index];
+              return Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        PillReportScreen2.routeName,
+                        arguments: {'patient': ppatients},
+                      );
+                    },
+                    child: _PillStatRow(
+                      medicine.name ?? "Unnamed",
+                      "${medicine.type}",
+                      DateFormat('d/M/y').format(DateTime.parse(
+                          medicine.endDate!)), // ← يطبع 22/6/2003
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                ],
+              );
+            },
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: ElevatedButton(
@@ -117,8 +142,11 @@ class _DailyStats extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              Navigator.pushNamed(context, RadiologyReportScreen.routeName,
-                  arguments: {"patient": ppatients});
+              Navigator.pushNamed(
+                context,
+                RadiologyReportScreen.routeName,
+                arguments: {"patient": ppatients},
+              );
             },
             child: const Text(
               "Patient's Radiology Reports",
@@ -139,14 +167,20 @@ class _PillStatRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(name, style: const TextStyle(color: Colors.white)),
-      subtitle: Text(time, style: const TextStyle(color: Colors.white54)),
-      trailing: Text(
-        status,
-        style: TextStyle(
-          color: status == 'Taken' ? Colors.green : Colors.red,
-          fontWeight: FontWeight.bold,
+    return Container(
+      decoration: BoxDecoration(
+          border: BoxBorder.fromBorderSide(
+              BorderSide(width: 2, color: Color(0xFFA27EFC))),
+          borderRadius: BorderRadius.circular(20)),
+      child: ListTile(
+        title: Text(name, style: const TextStyle(color: Colors.white)),
+        subtitle: Text(time, style: const TextStyle(color: Colors.white54)),
+        trailing: Text(
+          status,
+          style: TextStyle(
+              color: Color(0xFFD0D2D1),
+              fontWeight: FontWeight.bold,
+              fontSize: 14),
         ),
       ),
     );
@@ -154,33 +188,149 @@ class _PillStatRow extends StatelessWidget {
 }
 
 class _WeeklyStats extends StatelessWidget {
-  final String patientName;
+  final Patients ppatients;
 
-  const _WeeklyStats({required this.patientName, Key? key}) : super(key: key);
+  const _WeeklyStats({required this.ppatients, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        "Weekly stats for $patientName",
-        style: const TextStyle(color: Colors.white),
-      ),
+    List<Medicines> medicines = ppatients.medicines ?? [];
+
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        Text(
+          DateFormat('d MMM').format(DateTime.now()), // مثال: 22 Jun
+          style: const TextStyle(color: Colors.white70),
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: ListView.builder(
+            itemCount: medicines.length,
+            itemBuilder: (context, index) {
+              final medicine = medicines[index];
+              return Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        PillReportScreen2.routeName,
+                        arguments: {'patient': ppatients},
+                      );
+                    },
+                    child: _PillStatRow(
+                      medicine.name ?? "Unnamed",
+                      "${medicine.type}",
+                      DateFormat('d/M/y').format(DateTime.parse(
+                          medicine.endDate!)), // ← يطبع 22/6/2003
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                ],
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFA892F5),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                RadiologyReportScreen.routeName,
+                arguments: {"patient": ppatients},
+              );
+            },
+            child: const Text(
+              "Patient's Radiology Reports",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
 
 class _MonthlyStats extends StatelessWidget {
-  final String patientName;
+  final Patients ppatients;
 
-  const _MonthlyStats({required this.patientName, Key? key}) : super(key: key);
+  const _MonthlyStats({required this.ppatients, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        "Monthly stats for $patientName",
-        style: const TextStyle(color: Colors.white),
-      ),
+    List<Medicines> medicines = ppatients.medicines ?? [];
+
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        Text(
+          DateFormat('d MMM').format(DateTime.now()), // مثال: 22 Jun
+          style: const TextStyle(color: Colors.white70),
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: ListView.builder(
+            itemCount: medicines.length,
+            itemBuilder: (context, index) {
+              final medicine = medicines[index];
+              return Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        PillReportScreen2.routeName,
+                        arguments: {'patient': ppatients},
+                      );
+                    },
+                    child: _PillStatRow(
+                      medicine.name ?? "Unnamed",
+                      "${medicine.type}",
+                      DateFormat('d/M/y').format(DateTime.parse(
+                          medicine.endDate!)), // ← يطبع 22/6/2003
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                ],
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFA892F5),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                RadiologyReportScreen.routeName,
+                arguments: {"patient": ppatients},
+              );
+            },
+            child: const Text(
+              "Patient's Radiology Reports",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

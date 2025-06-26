@@ -235,6 +235,22 @@ class _ChooseBottleUpdateState extends State<ChooseBottleUpdate> {
                                   itemBuilder: (context, index) {
                                     final med = medicines[index];
                                     final bottle = med.numPottle ?? 'Unknown';
+                                    String dosageStr =
+                                        getMedicineAmountByBottle(bottle);
+                                    int dosage = int.tryParse(dosageStr) ?? 0;
+
+                                    String imagePath;
+                                    if (dosageStr == 'empty') {
+                                      imagePath = 'assets/images/U 1.png';
+                                    } else if (dosage >= 25) {
+                                      imagePath =
+                                          'assets/images/bottle_high_pills.png';
+                                    } else if (dosage > 0) {
+                                      imagePath =
+                                          'assets/images/bottle_low_pills.png';
+                                    } else {
+                                      imagePath = 'assets/images/U 1.png';
+                                    }
                                     return InkWell(
                                       onTap: () async {
                                         await Navigator.pushNamed(
@@ -273,8 +289,7 @@ class _ChooseBottleUpdateState extends State<ChooseBottleUpdate> {
                                             ),
                                             SizedBox(height: 8),
                                             Center(
-                                                child: Image.asset(
-                                                    'assets/images/U 1.png')),
+                                                child: Image.asset(imagePath)),
                                             SizedBox(height: 8),
                                             Text(
                                               getMedicineNameByBottle(bottle),
