@@ -134,7 +134,7 @@ class _HomeDoctorScreenState extends State<HomeDoctorScreen> {
     required String label,
     required int index,
   }) {
-    const purple = Color(0xFFA892F5);
+    const purple = Color(0xFF825DDE);
     final isSelected = selectedIndex == index;
     final isHome = index == 1;
 

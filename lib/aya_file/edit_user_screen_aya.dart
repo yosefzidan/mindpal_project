@@ -52,7 +52,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
 
         _nameController.text = medicine?.name ?? '';
         _amountController.text = medicine?.dosage ?? '';
-        _pillsPerDayController.text = '2';
+        _pillsPerDayController.text = medicine?.pillsPerDay ?? '';
         _hoursApart = medicine?.schedule ?? '';
 
         String timeString = medicine?.timeToTake ?? '10:30';
@@ -154,6 +154,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
       code: medicine!.code,
       confirm: medicine!.confirm ?? false,
       numPottle: medicine!.numPottle,
+      pillsPerDay: _pillsPerDayController.text,
       type: medicine!.type,
     );
 

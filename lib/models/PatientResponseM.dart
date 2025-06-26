@@ -133,6 +133,8 @@ class Patients {
 /// startDate : "2025-04-14T00:00:00.000Z"
 /// endDate : "2025-04-21T00:00:00.000Z"
 /// code : "680e46afa94ae296cbf6d8d3"
+/// "pillsPerDay": 3,
+///"intervalDays": 1,
 /// confirm : true
 /// __v : 0
 
@@ -145,11 +147,14 @@ class Medicines {
     this.type,
     this.startDate,
     this.endDate,
+    this.pillsPerDay,
+    this.intervalDays,
     this.code,
     this.confirm,
     this.numPottle,
     this.timeToTake,
     this.v,
+    this.reminders,
   });
 
   Medicines.fromJson(dynamic json) {
@@ -160,11 +165,22 @@ class Medicines {
     type = json['type'];
     startDate = json['startDate'];
     endDate = json['endDate'];
-    code = json['prescribedTo'];
+    pillsPerDay = json['pillsPerDay']?.toString();
+    intervalDays = json['intervalDays']?.toString();
+    code = json['code'];
     confirm = json['confirm'];
     numPottle = json['numPottle'];
     timeToTake = json['timeToTake'];
     v = json['__v'];
+
+    if (json['reminders'] != null) {
+      reminders = [];
+      json['reminders'].forEach((v) {
+        if (v != null) {
+          reminders?.add(Reminder.fromJson(v));
+        }
+      });
+    }
   }
 
   String? id;
@@ -174,24 +190,34 @@ class Medicines {
   String? type;
   String? startDate;
   String? endDate;
+  String? pillsPerDay;
+  String? intervalDays;
   String? code;
   String? numPottle;
   String? timeToTake;
   bool? confirm;
   int? v;
+  List<Reminder>? reminders;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
+    map['_id'] = id;
     map['name'] = name;
     map['dosage'] = dosage;
     map['schedule'] = schedule;
     map['type'] = type;
     map['startDate'] = startDate;
     map['endDate'] = endDate;
+    map['pillsPerDay'] = pillsPerDay;
+    map['intervalDays'] = intervalDays;
     map['code'] = code;
     map['confirm'] = confirm;
     map['numPottle'] = numPottle;
     map['timeToTake'] = timeToTake;
+    map['__v'] = v;
+    if (reminders != null) {
+      map['reminders'] = reminders?.map((v) => v.toJson()).toList();
+    }
     return map;
   }
 }
@@ -243,5 +269,45 @@ class Scan {
     map['createdAt'] = createdAt;
     map['analysisResult'] = analysisResult;
     return map;
+  }
+}
+
+class Reminder {
+  final String? id;
+  final String? patientId;
+  final String? medicineId;
+  final DateTime? time;
+  final String? createdBy;
+  final String? status;
+
+  Reminder({
+    this.id,
+    this.patientId,
+    this.medicineId,
+    this.time,
+    this.createdBy,
+    this.status,
+  });
+
+  factory Reminder.fromJson(Map<String, dynamic> json) {
+    return Reminder(
+      id: json['_id'],
+      patientId: json['patientId'],
+      medicineId: json['medicineId'],
+      time: json['time'] != null ? DateTime.parse(json['time']) : null,
+      createdBy: json['createdBy'],
+      status: json['status'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'patientId': patientId,
+      'medicineId': medicineId,
+      'time': time?.toIso8601String(),
+      'createdBy': createdBy,
+      'status': status,
+    };
   }
 }

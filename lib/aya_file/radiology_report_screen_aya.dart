@@ -25,6 +25,7 @@ class _RadiologyReportScreenState extends State<RadiologyReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Scan> scan = patients!.scan ?? [];
     return Scaffold(
       backgroundColor: Color(0xFF18181B),
       bottomNavigationBar: BottomNavBar(selected: 1),

@@ -50,7 +50,7 @@ class _ReportTabState extends State<ReportTab> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
-    final purple = const Color(0xFFA892F5);
+    final purple = const Color(0xFFA27EFC);
     final dark = const Color(0xFF191919);
     return Scaffold(
       backgroundColor: Color(0xFF191919),
